@@ -68,17 +68,18 @@ public class Application {
                 int shape = Integer.parseInt(dividedInput[1]);
                 int x = Integer.parseInt(dividedInput[2]);
                 int y = Integer.parseInt(dividedInput[3]);
-                // TODO
+                paint.move(shape, x, y);
             } else if (dividedInput[0].equals("color")) {
                 // change color of shape like this : color [shape number] [char]
                 int shape = Integer.parseInt(dividedInput[1]);
                 char c = dividedInput[2].charAt(0);
-                // TODO
+                paint.changeColor(shape, c);
             } else if (dividedInput[0].equals("list")) {
                 // show a numbered list of presented shapes
                 view.displayAsciiArtList();
             } else if (input.equalsIgnoreCase("show")) {
-                view.displayAsciiArt(); // Affiche l'illustration ASCII
+                // shows the drawing
+                view.displayAsciiArt();
             } else {
                 System.out.println("Command not recognized.");
             }

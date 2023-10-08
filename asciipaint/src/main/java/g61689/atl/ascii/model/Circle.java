@@ -54,4 +54,14 @@ public class Circle extends ColoredShape {
         double dy = p.getY() - center.getY()+1;
         return dx * dx + dy * dy < radius * radius;
     }
+
+    /**
+     * Override of the toString method. Helps to output the name of the shape.
+     *
+     * @return name of the shape
+     */
+    @Override
+    public String toString() {
+        return "Circle";
+    }
 }

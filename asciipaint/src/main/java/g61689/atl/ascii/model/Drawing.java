@@ -1,13 +1,14 @@
 package g61689.atl.ascii.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * An illustration that has a size and contains a collection of shapes.
  */
 public class Drawing {
-    private final List<Shape> shapes;
+    private final List<ColoredShape> shapes;
     private final int height;
     private final int width;
 
@@ -37,7 +38,7 @@ public class Drawing {
      *
      * @param shape shape
      */
-    public void addShape(Shape shape) {
+    public void addShape(ColoredShape shape) {
         shapes.add(shape);
     }
 
@@ -54,6 +55,36 @@ public class Drawing {
             }
         }
         return null;
+    }
+
+    /**
+     * Moves a shape.
+     *
+     * @param number the number of the shape that the user wants to move
+     * @param dx x-axis distance to move
+     * @param dy y-axis distance to move
+     */
+    public void move(int number, int dx, int dy) {
+        shapes.get(number).move(dx, dy);
+    }
+
+    /**
+     * Changes the color of a shape.
+     *
+     * @param number the number of the shape that the user wants to change the color
+     * @param c the color
+     */
+    public void changeColor(int number, char c) {
+        shapes.get(number).setColor(c);
+    }
+
+    /**
+     * Returns the list of shapes that exist on the drawing.
+     *
+     * @return list of shapes
+     */
+    public List<ColoredShape> getShapes() {
+        return Collections.unmodifiableList(shapes);
     }
 
     /**

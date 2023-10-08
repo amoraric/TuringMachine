@@ -71,7 +71,7 @@ public class AsciiPaint {
      * @param dy y-axis distance to move
      */
     public void move(int number, int dx, int dy) {
-        // TODO
+        drawing.move(number, dx, dy);
     }
 
     /**
@@ -80,8 +80,23 @@ public class AsciiPaint {
      * @param number the number of the shape that the user wants to change the color
      * @param c the color
      */
-    public void color(int number, char c) {
-        // TODO
+    public void changeColor(int number, char c) {
+        drawing.changeColor(number, c);
+    }
+
+    /**
+     * Returns the numbered list of shapes that exist on the drawing in a string.
+     *
+     * @return list of shapes
+     */
+    public String getShapes() {
+        StringBuilder shapes = new StringBuilder();
+        int cc = 0;
+        for (ColoredShape shape : drawing.getShapes()) {
+            shapes.append(cc).append(". ").append(shape).append('\n');
+            cc ++;
+        }
+        return shapes.toString();
     }
 
     /**

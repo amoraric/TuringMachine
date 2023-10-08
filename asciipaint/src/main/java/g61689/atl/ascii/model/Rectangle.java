@@ -45,4 +45,14 @@ public class Rectangle extends ColoredShape {
         return (p.getX() >= upperLeft.getX()-1 && p.getX() < upperLeft.getX() + this.width-1)
                 && (p.getY() >= upperLeft.getY()-1 && p.getY() < upperLeft.getY() + this.height-1);
     }
+
+    /**
+     * Override of the toString method. Helps to output the name of the shape.
+     *
+     * @return name of the shape
+     */
+    @Override
+    public String toString() {
+        return "Rectangle";
+    }
 }

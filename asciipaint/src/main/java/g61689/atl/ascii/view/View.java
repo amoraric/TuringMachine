@@ -27,9 +27,11 @@ public class View {
     }
 
     /**
-     * Outputs the shape's list.
+     * Outputs the list of shapes that are on the drawing.
      */
     public void displayAsciiArtList() {
-
+        String shapes = asciiPaint.getShapes();
+        System.out.println("List of shapes used in the drawing :");
+        System.out.println(shapes);
     }
 }
