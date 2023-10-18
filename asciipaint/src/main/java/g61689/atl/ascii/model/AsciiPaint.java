@@ -10,7 +10,7 @@ public class AsciiPaint {
      * Default constructor
      */
     public AsciiPaint() {
-        this.drawing = new Drawing(50, 50);
+        drawing = new Drawing(50, 50);
     }
 
     /**
@@ -20,7 +20,7 @@ public class AsciiPaint {
      * @param height height
      */
     public AsciiPaint(int width, int height) {
-        this.drawing = new Drawing(width, height);
+        drawing = new Drawing(width, height);
     }
 
     /**
@@ -32,8 +32,9 @@ public class AsciiPaint {
      * @param color shape's color
      */
     public void newCircle(int x, int y, double radius, char color) {
+        // vérifier radius >0
         Circle circle = new Circle(new Point(x, y), radius, color);
-        this.drawing.addShape(circle);
+        drawing.addShape(circle);
     }
 
     /**
@@ -46,6 +47,7 @@ public class AsciiPaint {
      * @param color shape's color
      */
     public void newRectangle(int x, int y, double width, double height, char color) {
+        // vérifier params
         Rectangle rectangle = new Rectangle(new Point(x, y), width, height, color);
         this.drawing.addShape(rectangle);
     }
@@ -66,12 +68,13 @@ public class AsciiPaint {
     /**
      * Moves a shape.
      *
-     * @param number the number of the shape that the user wants to move
+     * @param index the number of the shape that the user wants to move
      * @param dx x-axis distance to move
      * @param dy y-axis distance to move
      */
-    public void move(int number, int dx, int dy) {
-        drawing.move(number, dx, dy);
+    public void move(int index, int dx, int dy) {
+        // vérifier index
+        drawing.move(index, dx, dy);
     }
 
     /**
@@ -81,6 +84,9 @@ public class AsciiPaint {
      * @param c the color
      */
     public void changeColor(int number, char c) {
+
+        // vérifier index >=0 et < le nobre de shape.
+
         drawing.changeColor(number, c);
     }
 
@@ -89,7 +95,7 @@ public class AsciiPaint {
      *
      * @return list of shapes
      */
-    public String getShapes() {
+    public String getShapes() { // dans la vue.
         StringBuilder shapes = new StringBuilder();
         int cc = 0;
         for (ColoredShape shape : drawing.getShapes()) {
@@ -104,7 +110,7 @@ public class AsciiPaint {
      *
      * @return the drawing table string
      */
-    public String asAscii() {
+    public String asAscii() { // dans la vue.
         StringBuilder asciiArt = new StringBuilder();
 
         for (int y = 0; y < drawing.getHeight(); y++) {

@@ -1,7 +1,7 @@
 package g61689.atl.ascii.model;
 
 /**
- * An abstract class that implements the Shape interface.
+ * An abstract class that implements the Shape interface and handles the color.
  */
 public abstract class ColoredShape implements Shape {
     private char color;
@@ -30,6 +30,6 @@ public abstract class ColoredShape implements Shape {
      * @return a color
      */
     public char getColor() {
-        return this.color;
+        return color;
     }
 }

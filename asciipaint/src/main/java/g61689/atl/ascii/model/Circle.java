@@ -42,17 +42,7 @@ public class Circle extends ColoredShape {
      */
     @Override
     public boolean isInside(Point p) {
-//        double dx = Math.abs(p.getX() - center.getX());
-//        double dy = Math.abs(p.getY() - center.getY());
-//        double distanceSquared = dx * dx + dy * dy;
-//        double radiusSquared = radius * radius;
-//
-//        // Check if the point is inside the circle with some tolerance (e.g., 1 pixel)
-//        return Math.abs(distanceSquared - radiusSquared) <= 1;
-
-        double dx = p.getX() - center.getX()+1;
-        double dy = p.getY() - center.getY()+1;
-        return dx * dx + dy * dy < radius * radius;
+        return center.distanceTo(p) <= radius;
     }
 
     /**

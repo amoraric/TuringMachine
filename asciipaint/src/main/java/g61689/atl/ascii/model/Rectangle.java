@@ -18,6 +18,7 @@ public class Rectangle extends ColoredShape {
      */
     public Rectangle(Point upperLeft, double width, double height, char color) {
         super(color);
+        // vérifier height and width >0
         this.upperLeft = upperLeft;
         this.width = width;
         this.height = height;
@@ -31,7 +32,7 @@ public class Rectangle extends ColoredShape {
      */
     @Override
     public void move(double dx, double dy) {
-        this.upperLeft.move(dx, dy);
+        upperLeft.move(dx, dy);
     }
 
     /**
@@ -42,8 +43,10 @@ public class Rectangle extends ColoredShape {
      */
     @Override
     public boolean isInside(Point p) {
-        return (p.getX() >= upperLeft.getX()-1 && p.getX() < upperLeft.getX() + this.width-1)
-                && (p.getY() >= upperLeft.getY()-1 && p.getY() < upperLeft.getY() + this.height-1);
+        return     p.getX() >= upperLeft.getX()
+                && p.getX() < upperLeft.getX() + width
+                && p.getY() >= upperLeft.getY()
+                && p.getY() < upperLeft.getY() + height;
     }
 
     /**

@@ -2,8 +2,12 @@ package g61689.atl.ascii.model;
 
 /**
  * Interface of a shape.
+ *
+ * @author Augustin
  */
 public interface Shape {
+
+
     /**
      * Method that moves a shape.
      *
@@ -26,4 +30,6 @@ public interface Shape {
      * @return a color
      */
     char getColor();
+
+    // setColor
 }

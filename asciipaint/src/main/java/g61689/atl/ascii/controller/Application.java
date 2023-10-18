@@ -38,6 +38,7 @@ public class Application {
             } else if (dividedInput[0].equals("add")) {
                 switch (dividedInput[1]) {
                     case "circle" -> {
+                        // private void handleAddCircle(input)
                         int x = Integer.parseInt(dividedInput[2]);
                         int y = Integer.parseInt(dividedInput[3]);
                         int r = Integer.parseInt(dividedInput[4]);

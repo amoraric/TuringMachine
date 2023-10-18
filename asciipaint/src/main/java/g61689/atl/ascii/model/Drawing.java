@@ -11,14 +11,13 @@ public class Drawing {
     private final List<ColoredShape> shapes;
     private final int height;
     private final int width;
+    private static final int DEFAULT_HEIGHT = 20;
 
     /**
      * Default constructor
      */
     public Drawing() {
-        this.shapes = new ArrayList<>();
-        this.height = 50;
-        this.width = 50;
+        this(50,DEFAULT_HEIGHT); // constantes pour widht aussi.
     }
 
     /**
@@ -28,6 +27,7 @@ public class Drawing {
      * @param height height
      */
     public Drawing(int width, int height) {
+        // vérifier width et height
         this.shapes = new ArrayList<>();
         this.width = width;
         this.height = height;
@@ -38,7 +38,7 @@ public class Drawing {
      *
      * @param shape shape
      */
-    public void addShape(ColoredShape shape) {
+     void addShape(ColoredShape shape) {
         shapes.add(shape);
     }
 
@@ -64,7 +64,7 @@ public class Drawing {
      * @param dx x-axis distance to move
      * @param dy y-axis distance to move
      */
-    public void move(int number, int dx, int dy) {
+    void move(int number, int dx, int dy) {
         shapes.get(number).move(dx, dy);
     }
 
@@ -74,7 +74,7 @@ public class Drawing {
      * @param number the number of the shape that the user wants to change the color
      * @param c the color
      */
-    public void changeColor(int number, char c) {
+    void changeColor(int number, char c) {
         shapes.get(number).setColor(c);
     }
 
@@ -93,7 +93,7 @@ public class Drawing {
      * @return the height
      */
     int getHeight() {
-        return this.height;
+        return height;
     }
 
     /**
@@ -102,6 +102,6 @@ public class Drawing {
      * @return the width
      */
     int getWidth() {
-        return this.width;
+        return width;
     }
 }

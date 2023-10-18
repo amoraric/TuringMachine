@@ -3,7 +3,9 @@ package g61689.atl.ascii.model;
 import static java.lang.Math.*;
 
 /**
- * Class of a point.
+ * Represents a point in a 2D plane.
+ *
+ * @author Augustin
  */
 public class Point {
     private double x;
@@ -12,12 +14,12 @@ public class Point {
     /**
      * Point constructor that takes 2 coordinates.
      *
-     * @param dx x-axis coordinate
-     * @param dy y-axis coordinate
+     * @param x x-axis coordinate
+     * @param y y-axis coordinate
      */
-    public Point(double dx, double dy) {
-        this.x = dx;
-        this.y = dy;
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -36,8 +38,8 @@ public class Point {
      * @param dy y-axis distance to move
      */
     public void move(double dx, double dy) {
-        this.x += dx;
-        this.y += dy;
+        x += dx;
+        y += dy;
     }
 
     /**
@@ -47,7 +49,8 @@ public class Point {
      * @return the distance
      */
     public double distanceTo(Point other) {
-        return sqrt(abs(other.x - this.x) + abs(other.y - this.y));
+        return sqrt(abs(other.x - this.x)*abs(other.x - this.x)
+                + abs(other.y - this.y)*abs(other.y - this.y));
     }
 
     /**
@@ -56,7 +59,7 @@ public class Point {
      * @return x coordinate
      */
     public double getX() {
-        return this.x;
+        return x;
     }
 
     /**
@@ -65,6 +68,6 @@ public class Point {
      * @return y coordinate
      */
     public double getY() {
-        return this.y;
+        return y;
     }
 }
