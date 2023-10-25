@@ -114,6 +114,12 @@ public class Application {
             } else if (dividedInput[0].equals("delete")) {
                 int index = Integer.parseInt(dividedInput[1]);
                 paint.delete(index);
+            } else if (dividedInput[0].equals("undo")) {
+                // show a numbered list of presented shapes
+                paint.undo();
+            } else if (dividedInput[0].equals("redo")) {
+                // show a numbered list of presented shapes
+                paint.redo();
             } else if (dividedInput[0].equals("list")) {
                 // show a numbered list of presented shapes
                 View.displayAsciiArtList(paint);

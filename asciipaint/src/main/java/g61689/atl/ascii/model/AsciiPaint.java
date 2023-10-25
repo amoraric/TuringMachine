@@ -1,6 +1,11 @@
 package g61689.atl.ascii.model;
 
+import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Stack;
+
+// TODO : change ColoredShape by Shape here?
+// TODO : remember the index for each shape for the group and for the undo redo
 
 /**
  * Facade of the model that allows to modify it.
@@ -10,12 +15,15 @@ public class AsciiPaint {
     private static final int DEFAULT_HEIGHT = 50;
 
     private final Drawing drawing;
+    private Stack<Command> undoStack = new Stack<>();
+    private Stack<Command> redoStack = new Stack<>();
 
     /**
      * Default constructor
      */
     public AsciiPaint() {
         drawing = new Drawing(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
     }
 
     /**
@@ -41,7 +49,11 @@ public class AsciiPaint {
             throw new IllegalArgumentException("The radius can't be smaller or equal to zero!");
         }
         Circle circle = new Circle(new Point(x, y), radius, color);
-        drawing.addShape(circle);
+        Command command = new AddCommand(circle, drawing);
+        command.execute();
+        undoStack.add(command);
+        redoStack.clear();
+//        drawing.addShape(circle);
     }
 
     /**
@@ -58,7 +70,11 @@ public class AsciiPaint {
             throw new IllegalArgumentException("The width and height can't be smaller or equal to zero!");
         }
         Rectangle rectangle = new Rectangle(new Point(x, y), width, height, color);
-        this.drawing.addShape(rectangle);
+        Command command = new AddCommand(rectangle, drawing);
+        command.execute();
+        undoStack.add(command);
+        redoStack.clear();
+//        this.drawing.addShape(rectangle);
     }
 
     /**
@@ -71,7 +87,11 @@ public class AsciiPaint {
      */
     public void newSquare(int x, int y, double side, char color) {
         Square square = new Square(new Point(x, y), side, color);
-        this.drawing.addShape(square);
+        Command command = new AddCommand(square, drawing);
+        command.execute();
+        undoStack.add(command);
+        redoStack.clear();
+//        this.drawing.addShape(square);
     }
 
     /**
@@ -85,7 +105,11 @@ public class AsciiPaint {
         if (index < 0 || index >= drawing.getListSize()) {
             throw new IllegalArgumentException("The index can't be smaller than zero or greater than the size of the list!");
         }
-        drawing.move(index, dx, dy);
+        Command command = new MoveCommand(drawing.getShapeAt(index), dx, dy);
+        command.execute();
+        undoStack.add(command);
+        redoStack.clear();
+//        drawing.move(index, dx, dy);
     }
 
     /**
@@ -185,15 +209,58 @@ public class AsciiPaint {
         drawing.remove(index);
     }
 
+    /**
+     * Returns the height of the drawing
+     *
+     * @return height
+     */
     public int getHeight() {
         return drawing.getHeight();
     }
 
+    /**
+     * Returns the width of the drawing
+     *
+     * @return the width
+     */
     public int getWidth() {
         return drawing.getWidth();
     }
 
+    /**
+     * Returns the shape at a given point in the 2d plane
+     *
+     * @param point a point
+     * @return the shape at the point
+     */
     public Shape getShapeAt(Point point) {
         return drawing.getShapeAt(point);
+    }
+
+    /**
+     * Undoes the command
+     */
+    public void undo() {
+        try {
+            Command command = undoStack.pop();
+            command.cancel();
+            redoStack.push(command);
+        } catch (EmptyStackException e) {
+            System.out.println("The stack is empty, you can't execute that command!");
+        }
+
+    }
+
+    /**
+     * Redoes the command
+     */
+    public void redo() {
+        try {
+            Command command = redoStack.pop();
+            command.execute();
+            undoStack.push(command);
+        } catch (EmptyStackException e) {
+            System.out.println("The stack is empty, you can't execute that command!");
+        }
     }
 }

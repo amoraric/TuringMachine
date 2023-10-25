@@ -135,4 +135,8 @@ public class Drawing {
     public int getListSize() {
         return shapes.size();
     }
+
+    protected boolean remove(Shape shape) {
+        return shapes.remove(shape);
+    }
 }
