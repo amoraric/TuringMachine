@@ -11,13 +11,14 @@ public class Drawing {
     private final List<ColoredShape> shapes;
     private final int height;
     private final int width;
-    private static final int DEFAULT_HEIGHT = 20;
+    private static final int DEFAULT_WIDTH = 50;
+    private static final int DEFAULT_HEIGHT = 50;
 
     /**
      * Default constructor
      */
     public Drawing() {
-        this(50,DEFAULT_HEIGHT); // constantes pour widht aussi.
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     /**
@@ -27,7 +28,9 @@ public class Drawing {
      * @param height height
      */
     public Drawing(int width, int height) {
-        // vérifier width et height
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("The width and height of the drawing can't be smaller than zero!");
+        }
         this.shapes = new ArrayList<>();
         this.width = width;
         this.height = height;
@@ -103,5 +106,33 @@ public class Drawing {
      */
     int getWidth() {
         return width;
+    }
+
+    /**
+     * Returns the shape found at the given index
+     *
+     * @param index given index
+     * @return a shape
+     */
+    public ColoredShape getShapeAt(int index) {
+        return shapes.get(index);
+    }
+
+    /**
+     * Removes the shape at the given index
+     *
+     * @param index given index
+     */
+    protected void remove(int index) {
+        shapes.remove(index);
+    }
+
+    /**
+     * Returns the size of the list of shapes
+     *
+     * @return size of the list
+     */
+    public int getListSize() {
+        return shapes.size();
     }
 }

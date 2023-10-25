@@ -1,25 +1,26 @@
 
 # Table of contents
-* [TD1: Orienté objet](#td1:-orienté-objet)
-* [TD2: Héritage](#td2:-héritage)
+* [TD1: Object Oriented Programming](#td1-object-oriented-programming)
+* [TD2: Heritage](#td2-heritage)
+* [TD3: Graphical Interfaces](#td3-graphical-interfaces)
 
 
 -----------------------------------------------------------------------------------
 
 
-# TD1: Orienté objet
+# TD1: Object Oriented Programming
 
 ## Question 1:
-1. Le programme affiche une premiere fois les coordonnees d’un point initie a (0, 0) et une deuxieme fois les coordonnees changees a (2, 2)
+1. The program prints one time the coordinates of a point initiated at (0, 0) and a second time the changed coordinates at (2, 2)
 2. *java: class TestPoint is public, should be declared in a file named TestPoint.java*
-3. Pas d’erreur
-4. C’est fait
+3. No errors
+4. Done
 
 ## Question 2:
 1. *java: x has private access in TP1.Point*
-2. Le string qu’on a rajoute + la meme chose qu’avant
-3. Rien ne se passe, on ne traite pas le retour de la methode move
-4. C’est fait
+2. The string that we added + the same as before
+3. Nothing happens, we don't process the return of the move method
+4. Done
 
 ## Question 3:
 1. *java: call to this must be first statement in constructor*
@@ -34,22 +35,22 @@
         (2.0, 2.0)**
 3. **(10.0, 20.0)
      (12.0, 22.0)**
-4. C’est fait
+4. Done
 
 ## Question 4:
 1. **Circle : [(0.0, 0.0), 5.0]
      Circle : [(2.0, 5.0), 5.0]
      Circle : [(2.0, 5.0), 10.0]**
-2. Une seule, a la ligne 46 → *Point p = new Point();*
+2. Only one, at the line 46 → *Point p = new Point();*
 
 ## Question 5:
 1. **Circle : [(0.0, 0.0), 5.0]
      Circle : [(2.0, 5.0), 5.0]
      Circle : [(0.0, 0.0), 5.0]**
 2.
-    * Une instance pour Point et une autre pour Circle
-    * p reference un point et p2 reference le point qui est le centre du cercle
-    * c’est p qui reference l’attribut centre
+    * One instance for Point and another one for Circle
+    * p references a point and p2 references the point at the center of the circle
+    * p that references the attribute center
 3. **Circle : [(0.0, 0.0), 5.0]
      Circle : [(2.0, 5.0), 5.0]
      Circle : [(0.0, 0.0), 5.0]**
@@ -57,9 +58,9 @@
      Circle : [(2.0, 5.0), 5.0]
      Circle : [(2.0, 5.0), 5.0]**
 5.
-    * Une instance pour Point et une autre pour Circle
-    * p reference un point et p2 reference une nouvelle instance du point qui est le centre du cercle
-    * ce n’est plus p car maintenant quand on fait un move sur p2 p n’est pas modifie
+    * One instance for Point and another one for Circle
+    * p references a point and p2 references a new instance of the point that is the center of the circle
+    * it's not p anymore because now when we move p2, p is not modified anymore
 
 ## Question 6:
 1. **Rectangle : [(0.0, 0.0), (5.0, 3.0)]
@@ -67,14 +68,27 @@
      Rectangle : [(2.0, 5.0), (7.0, 8.0)]
      Perimeter : 16.0**
 2. 
+### Object Diagram
+- `Point p1`  
+  - x = 0  
+  - y = 0
+
+- `Point p2`  
+  - x = 5  
+  - y = 3
+
+- `Rectangle r`
+  - bl -----> p1
+  - ur -----> p2
+
 3.
-- Non, car le perimetre est negatif
+- No, because the perimeter is negative
 - **Rectangle : [(0.0, 0.0), (5.0, 3.0)]
     Perimeter : 16.0
     Rectangle : [(12.0, 15.0), (7.0, 8.0)]
     Perimeter : -24.0**
-- Toujours 16 unites
-- Car l’invariant n’est pas respecte et le bottom left est plus grand que le upper right
+- 16 units
+- Becuase the invariant isn't repsected and the bottom left is greater than the upper right
 4. **Rectangle : [(0.0, 0.0), (5.0, 3.0)]
      Perimeter : 16.0
      Rectangle : [(2.0, 5.0), (7.0, 8.0)]
@@ -84,30 +98,30 @@
 -----------------------------------------------------------------------------------
       
       
-# TD2: Héritage
+# TD2: Heritage
 
 ## Question 1:
 1. **(3.0, 6.0) - FF0000FF
       x: 3.0
       color: FF0000FF**
-2. La ligne *System.out.println("color : " + String.format("%08X", p.getColor()));* car ce point n’a plus de methode “getColor()”. Si on la supprime on n’a plus d’erreur.
-3. Non, car on essaye d’initier un constructeur de Point pour un objet de type ColoredPoint
-4. Non, car on essaye d’acceder a une valeur privee de Point
+2. The line *System.out.println("color : " + String.format("%08X", p.getColor()));* because this point doesn't have the method “getColor()” anymore. If we remove it we don't get an error anymore.
+3. No, because we try to initiate a constructor of Point for an object of type ColoredPoint
+4. No, because we try to access a private value of Point
 5. *java: cyclic inheritance involving TP2.ColoredPoint*
 6. *java: cannot inherit from final TP2.Point*
-7. C’est fait
+7. Done
 
 ## Question 2:
-1. Oui, parce que toutes les classes heritent d’Object, donc on peut referencer une instance de la classe Point avec une variable de type Object
-2. Egalement
-3. Oui, elle est definie dans la classe Object. On peut l’appeler sur un objet de type ColoredPoint, car toute classe herite d’Object
-4. C’est fait
+1. Yes, because all the classes inherit from Object, so we can reference an instance of the class Point with a variable of type Object
+2. The same as above
+3. Yes, it is defined in the Object class. We can call it on an object of type ColoredPaint, because all the classes inherit from Object
+4. Done
 
 ## Question 3:
 1. *java: call to super must be first statement in constructor*
 2. *java: constructor Point in class TP2.Point cannot be applied to given types;* Ca sert a faire appel au constructeur de la classe de laquelle on herite
-3. Non, car maintenant on n’est plus oblige de definir les coordonnees x, y car il y a un constructeur qui les initie a 0 par defaut
-4. C’est fait
+3. No, because now we're no longer obliged to define the coordinates of x and y because there's a constructor that initiates them at 0 each by default
+4. Done
 
 ## Question 4:
 1. **Constructor of A
@@ -115,22 +129,22 @@
      Constructor of C**
 2. **Constructor of A
      Constructor of B**
-3. Oui, il est bien identique
-4. 
-5. C’est fait
+3. Yes, it is identical
+4. Object() is the default constructor
+5. Done
 
 ## Question 5: // a repondre
 1. **(0.0, 0.0) - not pinned
      (1.0, 1.0) – pinned**
-2. Les deux, on passe d’abord par PinnablePoint et puis grace au super on passe par Point aussi
+2. Both, we first go through PinnablePoint and then thanks to 'super' we go through Point as well
 3. *java: move(double,double) in TP2.PinnablePoint cannot override move(double,double) in TP2.Point overridden method does not throw java.lang.Exception*
-4. Oui, *java: unreported exception java.lang.Exception; must be caught or declared to be thrown*
-5. Oui, *java: unreported exception java.lang.Exception; must be caught or declared to be thrown*
-6. Oui
-7. 
+4. Yes, *java: unreported exception java.lang.Exception; must be caught or declared to be thrown*
+5. Yes, *Exception in thread "main" java.lang.IllegalStateException: Point is pinned, cannot move anymore*
+6. Yes
+7. Yes
 8. *java: move(double,double) in TP2.PinnablePoint cannot override move(double,double) in TP2.Point attempting to assign weaker access privileges; was public*
-9. Il va dans la methode move de la classe de laquelle on herite, ici c’est Point
-10. C’est fait
+9. It goes through the move method of the class that it inherits from, here it is Point
+10. Done
 
 ## Question 6:
 1. **(1.0, 1.0)
@@ -138,9 +152,27 @@
      (2.0, 2.0) - not pinned**
 
 ## Question 7:
-1. 
-2. 
-3. C’est  fait
+1. That the keyword 'protected' isn't allowed
+2. That the keyword public is redundant
+3. Done
 4. **(1.0, 1.0)
      (3.0, 5.0) - FF0000FF
      (2.0, 2.0) - not pinned**
+      
+      
+-----------------------------------------------------------------------------------
+      
+      
+# TD3: Graphical interfaces
+
+## Question 1:
+1. It changes the window's size
+2. The window appears without a border. Possible values:
+    * *StageStyle.DECORATED - a stage with a solid white background and platform decorations.*
+    * *StageStyle.UNDECORATED - a stage with a solid white background and no decorations.*
+    * *StageStyle.TRANSPARENT - a stage with a transparent background and no decorations.*
+    * *StageStyle.UTILITY - a stage with a solid white background and minimal platform decorations.*
+3. The text will take the eventual position depending on the method called
+
+## Question 2:
+1. 

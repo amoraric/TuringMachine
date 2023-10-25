@@ -31,5 +31,10 @@ public interface Shape {
      */
     char getColor();
 
-    // setColor
+    /**
+     * Sets a color for the shape.
+     *
+     * @param color a color
+     */
+    void setColor(char color);
 }

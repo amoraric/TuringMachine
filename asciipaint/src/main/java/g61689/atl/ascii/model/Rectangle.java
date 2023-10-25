@@ -18,7 +18,9 @@ public class Rectangle extends ColoredShape {
      */
     public Rectangle(Point upperLeft, double width, double height, char color) {
         super(color);
-        // vérifier height and width >0
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("The width and height can't be smaller or equal to zero!");
+        }
         this.upperLeft = upperLeft;
         this.width = width;
         this.height = height;

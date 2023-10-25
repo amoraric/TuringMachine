@@ -1,16 +1,21 @@
 package g61689.atl.ascii.model;
 
+import java.util.List;
+
 /**
  * Facade of the model that allows to modify it.
  */
 public class AsciiPaint {
+    private static final int DEFAULT_WIDTH = 50;
+    private static final int DEFAULT_HEIGHT = 50;
+
     private final Drawing drawing;
 
     /**
      * Default constructor
      */
     public AsciiPaint() {
-        drawing = new Drawing(50, 50);
+        drawing = new Drawing(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     /**
@@ -32,7 +37,9 @@ public class AsciiPaint {
      * @param color shape's color
      */
     public void newCircle(int x, int y, double radius, char color) {
-        // vérifier radius >0
+        if (radius <= 0) {
+            throw new IllegalArgumentException("The radius can't be smaller or equal to zero!");
+        }
         Circle circle = new Circle(new Point(x, y), radius, color);
         drawing.addShape(circle);
     }
@@ -47,7 +54,9 @@ public class AsciiPaint {
      * @param color shape's color
      */
     public void newRectangle(int x, int y, double width, double height, char color) {
-        // vérifier params
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("The width and height can't be smaller or equal to zero!");
+        }
         Rectangle rectangle = new Rectangle(new Point(x, y), width, height, color);
         this.drawing.addShape(rectangle);
     }
@@ -73,7 +82,9 @@ public class AsciiPaint {
      * @param dy y-axis distance to move
      */
     public void move(int index, int dx, int dy) {
-        // vérifier index
+        if (index < 0 || index >= drawing.getListSize()) {
+            throw new IllegalArgumentException("The index can't be smaller than zero or greater than the size of the list!");
+        }
         drawing.move(index, dx, dy);
     }
 
@@ -84,25 +95,19 @@ public class AsciiPaint {
      * @param c the color
      */
     public void changeColor(int number, char c) {
-
-        // vérifier index >=0 et < le nobre de shape.
-
+        if (number < 0 || number >= drawing.getListSize()) {
+            throw new IllegalArgumentException("The index can't be smaller than zero or greater than the size of the list!");
+        }
         drawing.changeColor(number, c);
     }
 
     /**
-     * Returns the numbered list of shapes that exist on the drawing in a string.
+     * Returns a list of shapes from the drawing
      *
      * @return list of shapes
      */
-    public String getShapes() { // dans la vue.
-        StringBuilder shapes = new StringBuilder();
-        int cc = 0;
-        for (ColoredShape shape : drawing.getShapes()) {
-            shapes.append(cc).append(". ").append(shape).append('\n');
-            cc ++;
-        }
-        return shapes.toString();
+    public List<ColoredShape> getShapes() {
+        return drawing.getShapes();
     }
 
     /**
@@ -128,5 +133,67 @@ public class AsciiPaint {
         }
 
         return asciiArt.toString();
+    }
+
+    /**
+     * Groups up multiple shapes
+     *
+     * @param color color of the group
+     * @param shapes indexes of the shapes to be added to the group
+     */
+    public void group(char color, int... shapes) {
+        Group group = new Group(color);
+
+        for (int shape : shapes) {
+            group.addShape(drawing.getShapeAt(shape));
+        }
+
+        drawing.addShape(group);
+
+        for (int i = shapes.length-1; i >= 0; i--) {
+            drawing.remove(shapes[i]);
+        }
+    }
+
+    /**
+     * Ungroups a collection of shapes
+     *
+     * @param index index of the group
+     */
+    public void ungroup(int index) {
+        Shape groupShape = drawing.getShapeAt(index);
+
+        if (groupShape instanceof Group group) {
+            List<ColoredShape> groupShapes = group.getShapes();
+
+            for (ColoredShape shape : groupShapes) {
+                drawing.addShape(shape);
+            }
+
+            drawing.remove(index);
+        } else {
+            throw new IllegalArgumentException("Shape at index " + index + " is not a group.");
+        }
+    }
+
+    /**
+     * Deletes a shape or a group
+     *
+     * @param index index
+     */
+    public void delete(int index) {
+        drawing.remove(index);
+    }
+
+    public int getHeight() {
+        return drawing.getHeight();
+    }
+
+    public int getWidth() {
+        return drawing.getWidth();
+    }
+
+    public Shape getShapeAt(Point point) {
+        return drawing.getShapeAt(point);
     }
 }
