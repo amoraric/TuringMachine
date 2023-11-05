@@ -175,4 +175,29 @@
 3. The text will take the eventual position depending on the method called
 
 ## Question 2:
-1. 
+1. - The first is checked by default and can be either checked or unchecked by clicking
+   - The second is indeterminate by default and can be either checked or unchecked by clicking
+   - The third one is unchecked by default and can be either checked, unchecked or indeterminate by clicking
+2. The first and last checkboxes will not be centered vertically
+
+## Question 3:
+1. We don't see the text we type anymore
+2. You can't change the text you typed anymore
+
+## Question 4:
+When we press the "Print" button, the text we typed is being printed in the command line interface
+
+## Question 5:
+The `getChildren()` method returns a collection of nodes that inherit from a parent node that we call the method with.
+The interest in using it is to get and work with all the different child nodes of the parent layout
+
+## Question 6:
+1. Done
+2. Yes, by using the `addAll()` method we can fit the 3 lines in 1
+3. The notion of *clip* is important because it determines how the content is shown or masked when it exceeds the limits
+of a given container
+
+## Question 7:
+1. The objects added to a single cell are arranged in a stack, with the last-added object placed on top
+2. The *Password* label will be displayed in the center of it's cell
+3. The password TextField will extend to the end of it's column
