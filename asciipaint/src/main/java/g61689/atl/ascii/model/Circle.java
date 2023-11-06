@@ -23,33 +23,16 @@ public class Circle extends ColoredShape {
         this.radius = radius;
     }
 
-    /**
-     * Moves the circle.
-     *
-     * @param dx x-axis distance to move
-     * @param dy y-axis distance to move
-     */
     @Override
     public void move(double dx, double dy) {
         center.move(dx, dy);
     }
 
-    /**
-     * Returns true or false depending on if the point p is inside the circle.
-     *
-     * @param p a point
-     * @return a boolean
-     */
     @Override
     public boolean isInside(Point p) {
         return center.distanceTo(p) <= radius;
     }
 
-    /**
-     * Override of the toString method. Helps to output the name of the shape.
-     *
-     * @return name of the shape
-     */
     @Override
     public String toString() {
         return "Circle";

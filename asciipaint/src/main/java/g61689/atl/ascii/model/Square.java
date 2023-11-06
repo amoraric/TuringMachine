@@ -15,11 +15,6 @@ public class Square extends Rectangle {
         super(upperLeft, side, side, color);
     }
 
-    /**
-     * Override of the toString method. Helps to output the name of the shape.
-     *
-     * @return name of the shape
-     */
     @Override
     public String toString() {
         return "Square";

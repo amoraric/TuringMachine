@@ -53,7 +53,6 @@ public class AsciiPaint {
         command.execute();
         undoStack.add(command);
         redoStack.clear();
-//        drawing.addShape(circle);
     }
 
     /**
@@ -74,7 +73,6 @@ public class AsciiPaint {
         command.execute();
         undoStack.add(command);
         redoStack.clear();
-//        this.drawing.addShape(rectangle);
     }
 
     /**
@@ -91,7 +89,23 @@ public class AsciiPaint {
         command.execute();
         undoStack.add(command);
         redoStack.clear();
-//        this.drawing.addShape(square);
+    }
+
+    /**
+     * Adds a new line to the drawing list of shapes.
+     *
+     * @param x1 first point's x-axis coordinate
+     * @param y1 first point's y-axis coordinate
+     * @param x2 second point's x-axis coordinate
+     * @param y2 second point's y-axis coordinate
+     * @param color shape's color
+     */
+    public void newLine(int x1, int y1, int x2, int y2, char color) {
+        Line line = new Line(new Point(x1, y1), new Point(x2, y2), color);
+        Command command = new AddCommand(line, drawing);
+        command.execute();
+        undoStack.add(command);
+        redoStack.clear();
     }
 
     /**
@@ -109,7 +123,6 @@ public class AsciiPaint {
         command.execute();
         undoStack.add(command);
         redoStack.clear();
-//        drawing.move(index, dx, dy);
     }
 
     /**
@@ -132,31 +145,6 @@ public class AsciiPaint {
      */
     public List<ColoredShape> getShapes() {
         return drawing.getShapes();
-    }
-
-    /**
-     * Gathers the whole drawing table into a string for output.
-     *
-     * @return the drawing table string
-     */
-    public String asAscii() { // dans la vue.
-        StringBuilder asciiArt = new StringBuilder();
-
-        for (int y = 0; y < drawing.getHeight(); y++) {
-            for (int x = 0; x < drawing.getWidth(); x++) {
-                Point currentPoint = new Point(x, y);
-                Shape shapeAtPoint = drawing.getShapeAt(currentPoint);
-
-                if (shapeAtPoint != null) {
-                    asciiArt.append(shapeAtPoint.getColor());
-                } else {
-                    asciiArt.append(' '); // If no shapes at this point, add an empty space
-                }
-            }
-            asciiArt.append('\n'); // New line
-        }
-
-        return asciiArt.toString();
     }
 
     /**

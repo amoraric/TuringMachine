@@ -26,23 +26,11 @@ public class Rectangle extends ColoredShape {
         this.height = height;
     }
 
-    /**
-     * Moves the rectangle.
-     *
-     * @param dx x-axis distance to move
-     * @param dy y-axis distance to move
-     */
     @Override
     public void move(double dx, double dy) {
         upperLeft.move(dx, dy);
     }
 
-    /**
-     * Returns true or false depending on if the point p is inside the rectangle.
-     *
-     * @param p a point
-     * @return a boolean
-     */
     @Override
     public boolean isInside(Point p) {
         return     p.getX() >= upperLeft.getX()
@@ -51,11 +39,6 @@ public class Rectangle extends ColoredShape {
                 && p.getY() < upperLeft.getY() + height;
     }
 
-    /**
-     * Override of the toString method. Helps to output the name of the shape.
-     *
-     * @return name of the shape
-     */
     @Override
     public String toString() {
         return "Rectangle";
