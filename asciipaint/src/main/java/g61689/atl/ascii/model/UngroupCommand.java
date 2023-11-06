@@ -30,6 +30,14 @@ public class UngroupCommand implements Command {
 
     @Override
     public void cancel() {
+        if (groupShape instanceof Group group) {
+            List<ColoredShape> groupShapes = group.getShapes();
 
+            for (ColoredShape shape : groupShapes) {
+                drawing.remove(shape);
+            }
+
+            drawing.addShape((ColoredShape) groupShape);
+        }
     }
 }

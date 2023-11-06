@@ -166,16 +166,12 @@ public class Application {
                     paint.delete(index);
                 }
             } else if (dividedInput[0].equals("undo")) {
-                // show a numbered list of presented shapes
                 paint.undo();
             } else if (dividedInput[0].equals("redo")) {
-                // show a numbered list of presented shapes
                 paint.redo();
             } else if (dividedInput[0].equals("list")) {
-                // show a numbered list of presented shapes
                 View.displayAsciiArtList(paint);
             } else if (input.equalsIgnoreCase("show")) {
-                // shows the drawing
                 View.displayAsciiArt(paint);
             } else if (input.equalsIgnoreCase("help")) {
                 View.displayCommands();

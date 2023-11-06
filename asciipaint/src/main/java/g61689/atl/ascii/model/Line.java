@@ -23,7 +23,9 @@ public class Line extends ColoredShape {
 
     @Override
     public boolean isInside(Point p) {
-        return false;
+        double dirCoeff = (p2.getY() - p1.getY()) / (p2.getX() - p1.getX());
+        return Math.abs(dirCoeff * p.getX() - p.getY() - dirCoeff * p1.getX() + p1.getY())
+                / (Math.sqrt(dirCoeff*dirCoeff + 1)) < 0.5;
     }
 
     @Override

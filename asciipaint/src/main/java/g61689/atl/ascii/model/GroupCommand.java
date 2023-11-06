@@ -28,6 +28,10 @@ public class GroupCommand implements Command {
 
     @Override
     public void cancel() {
+        for (ColoredShape shape : group.getShapes()) {
+            drawing.addShape(shape);
+        }
 
+        drawing.remove(group);
     }
 }
