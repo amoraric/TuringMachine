@@ -1,10 +1,9 @@
 package g61689.atl.ascii.model;
 
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Stack;
+import g61689.atl.util.CommandManager;
 
-// TODO : change ColoredShape by Shape here?
+import java.util.List;
+
 // TODO : remember the index for each shape for the group and for the undo redo
 
 /**
@@ -15,15 +14,14 @@ public class AsciiPaint {
     private static final int DEFAULT_HEIGHT = 50;
 
     private final Drawing drawing;
-    private Stack<Command> undoStack = new Stack<>();
-    private Stack<Command> redoStack = new Stack<>();
+    private final CommandManager commandManager;
 
     /**
      * Default constructor
      */
     public AsciiPaint() {
         drawing = new Drawing(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
+        commandManager = new CommandManager();
     }
 
     /**
@@ -34,6 +32,7 @@ public class AsciiPaint {
      */
     public AsciiPaint(int width, int height) {
         drawing = new Drawing(width, height);
+        commandManager = new CommandManager();
     }
 
     /**
@@ -50,9 +49,7 @@ public class AsciiPaint {
         }
         Circle circle = new Circle(new Point(x, y), radius, color);
         Command command = new AddCommand(circle, drawing);
-        command.execute();
-        undoStack.add(command);
-        redoStack.clear();
+        commandManager.newCommand(command);
     }
 
     /**
@@ -70,9 +67,7 @@ public class AsciiPaint {
         }
         Rectangle rectangle = new Rectangle(new Point(x, y), width, height, color);
         Command command = new AddCommand(rectangle, drawing);
-        command.execute();
-        undoStack.add(command);
-        redoStack.clear();
+        commandManager.newCommand(command);
     }
 
     /**
@@ -86,9 +81,7 @@ public class AsciiPaint {
     public void newSquare(int x, int y, double side, char color) {
         Square square = new Square(new Point(x, y), side, color);
         Command command = new AddCommand(square, drawing);
-        command.execute();
-        undoStack.add(command);
-        redoStack.clear();
+        commandManager.newCommand(command);
     }
 
     /**
@@ -103,9 +96,7 @@ public class AsciiPaint {
     public void newLine(int x1, int y1, int x2, int y2, char color) {
         Line line = new Line(new Point(x1, y1), new Point(x2, y2), color);
         Command command = new AddCommand(line, drawing);
-        command.execute();
-        undoStack.add(command);
-        redoStack.clear();
+        commandManager.newCommand(command);
     }
 
     /**
@@ -120,9 +111,7 @@ public class AsciiPaint {
             throw new IllegalArgumentException("The index can't be smaller than zero or greater than the size of the list!");
         }
         Command command = new MoveCommand(drawing.getShapeAt(index), dx, dy);
-        command.execute();
-        undoStack.add(command);
-        redoStack.clear();
+        commandManager.newCommand(command);
     }
 
     /**
@@ -155,16 +144,8 @@ public class AsciiPaint {
      */
     public void group(char color, int... shapes) {
         Group group = new Group(color);
-
-        for (int shape : shapes) {
-            group.addShape(drawing.getShapeAt(shape));
-        }
-
-        drawing.addShape(group);
-
-        for (int i = shapes.length-1; i >= 0; i--) {
-            drawing.remove(shapes[i]);
-        }
+        Command command = new GroupCommand(group, drawing, shapes);
+        commandManager.newCommand(command);
     }
 
     /**
@@ -174,18 +155,8 @@ public class AsciiPaint {
      */
     public void ungroup(int index) {
         Shape groupShape = drawing.getShapeAt(index);
-
-        if (groupShape instanceof Group group) {
-            List<ColoredShape> groupShapes = group.getShapes();
-
-            for (ColoredShape shape : groupShapes) {
-                drawing.addShape(shape);
-            }
-
-            drawing.remove(index);
-        } else {
-            throw new IllegalArgumentException("Shape at index " + index + " is not a group.");
-        }
+        Command command = new UngroupCommand(groupShape, drawing, index);
+        commandManager.newCommand(command);
     }
 
     /**
@@ -229,26 +200,13 @@ public class AsciiPaint {
      * Undoes the command
      */
     public void undo() {
-        try {
-            Command command = undoStack.pop();
-            command.cancel();
-            redoStack.push(command);
-        } catch (EmptyStackException e) {
-            System.out.println("The stack is empty, you can't execute that command!");
-        }
-
+        commandManager.undo();
     }
 
     /**
      * Redoes the command
      */
     public void redo() {
-        try {
-            Command command = redoStack.pop();
-            command.execute();
-            undoStack.push(command);
-        } catch (EmptyStackException e) {
-            System.out.println("The stack is empty, you can't execute that command!");
-        }
+        commandManager.redo();
     }
 }

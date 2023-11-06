@@ -20,7 +20,7 @@ public class AddCommand implements Command {
 
     @Override
     public void execute() {
-        drawing.addShape((ColoredShape) shape); // TODO : don't cast
+        drawing.addShape((ColoredShape) shape);
     }
 
     @Override
