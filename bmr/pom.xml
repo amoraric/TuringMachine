@@ -23,7 +23,7 @@
             <artifactId>javafx-maven-plugin</artifactId>
             <version>0.0.4</version>
             <configuration>
-                <mainClass>g61689.atl.bmr.Main</mainClass>
+                <mainClass>g61689.atl.bmr.view.View</mainClass>
             </configuration>
         </plugin>
     </plugins>

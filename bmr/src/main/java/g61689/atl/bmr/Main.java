@@ -91,6 +91,7 @@ public class Main extends Application {
      */
     private MenuBar createMenuBar(Stage primaryStage) {
         MenuBar menuBar = new MenuBar();
+        menuBar.setStyle("-fx-font-family: Arial; -fx-font-size: 12;");
         Menu fileMenu = new Menu("File");
         MenuItem exitMenuItem = new MenuItem("Exit");
 
@@ -140,12 +141,12 @@ public class Main extends Application {
     private GridPane createLeftGridPane() {
         GridPane root = new GridPane();
         Label data = new Label("Data");
-        data.setFont(Font.font("System", 12));
+        data.setFont(Font.font("Arial", 12));
         data.setUnderline(true);
         root.add(data, 0, 0);
 
         Label height = new Label("Height (cm)");
-        height.setFont(Font.font("System", 12));
+        height.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(height, HPos.LEFT);
         root.add(height, 0, 1);
 
@@ -156,11 +157,12 @@ public class Main extends Application {
                 event.consume();
             }
         });
+        tfdHeight.setStyle("-fx-prompt-text-fill: gray; -fx-font-family: Arial; -fx-font-size: 12;");
         tfdHeight.setPromptText("Height in cm");
         root.add(tfdHeight, 1, 1);
 
         Label weight = new Label("Weight (kg)");
-        weight.setFont(Font.font("System", 12));
+        weight.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(height, HPos.LEFT);
         root.add(weight, 0, 2);
 
@@ -170,11 +172,12 @@ public class Main extends Application {
                 event.consume();
             }
         });
+        tfdWeight.setStyle("-fx-prompt-text-fill: gray; -fx-font-family: Arial; -fx-font-size: 12;");
         tfdWeight.setPromptText("Weight in kg");
         root.add(tfdWeight, 1, 2);
 
         Label age = new Label("Age (years)");
-        age.setFont(Font.font("System", 12));
+        age.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(age, HPos.LEFT);
         root.add(age, 0, 3);
 
@@ -184,16 +187,19 @@ public class Main extends Application {
                 event.consume();
             }
         });
+        tfdAge.setStyle("-fx-prompt-text-fill: gray; -fx-font-family: Arial; -fx-font-size: 12;");
         tfdAge.setPromptText("Age in years");
         root.add(tfdAge, 1, 3);
 
         Label gender = new Label("Gender");
-        gender.setFont(Font.font("System", 12));
+        gender.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(gender, HPos.LEFT);
         root.add(gender, 0, 4);
 
         female = new RadioButton("Female");
+        female.setFont(Font.font("Arial", 12));
         male = new RadioButton("Male");
+        male.setFont(Font.font("Arial", 12));
 
         // Create an HBox to hold the radio buttons
         HBox genderBox = new HBox(10);
@@ -206,13 +212,14 @@ public class Main extends Application {
         root.add(genderBox, 1, 4); // Add the HBox to the grid
 
         Label lifeStyle = new Label("Life Style");
-        lifeStyle.setFont(Font.font("System", 12));
+        lifeStyle.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(lifeStyle, HPos.LEFT);
         root.add(lifeStyle, 0, 5);
 
         ObservableList<ActivityLevel> options = FXCollections.observableArrayList(ActivityLevel.values());
         choiceBox = new ChoiceBox<>(options);
         choiceBox.setValue(ActivityLevel.SEDENTARY);
+        choiceBox.setStyle("-fx-font-family: Arial; -fx-font-size: 12;");
 
         // Add the ListView to the VBox
         root.add(choiceBox, 1, 5);
@@ -231,27 +238,29 @@ public class Main extends Application {
     private GridPane createRightGridPane() {
         GridPane root = new GridPane();
         Label res = new Label("Results");
-        res.setFont(Font.font("System", 12));
+        res.setFont(Font.font("Arial", 12));
         res.setUnderline(true);
         root.add(res, 0, 0);
 
         Label bmr = new Label("BMR");
-        bmr.setFont(Font.font("System", 12));
+        bmr.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(bmr, HPos.LEFT);
         root.add(bmr, 0, 1);
 
         tfdBmr = new TextField();
         tfdBmr.setEditable(false);
+        tfdBmr.setStyle("-fx-prompt-text-fill: gray; -fx-font-family: Arial; -fx-font-size: 12;");
         tfdBmr.setPromptText("BMR Results");
         root.add(tfdBmr, 1, 1);
 
         Label calories = new Label("Calories");
-        calories.setFont(Font.font("System", 12));
+        calories.setFont(Font.font("Arial", 12));
         GridPane.setHalignment(calories, HPos.LEFT);
         root.add(calories, 0, 2);
 
         tfdCalories = new TextField();
         tfdCalories.setEditable(false);
+        tfdCalories.setStyle("-fx-prompt-text-fill: gray; -fx-font-family: Arial; -fx-font-size: 12;");
         tfdCalories.setPromptText("Calories needs");
         root.add(tfdCalories, 1, 2);
         return root;
@@ -264,6 +273,7 @@ public class Main extends Application {
      */
     private Button createBMRButton() {
         Button bmrButton = new Button("Calculate the BMR");
+        bmrButton.setFont(Font.font("Arial", 12));
         bmrButton.setMaxWidth(Double.MAX_VALUE);
         VBox.setMargin(bmrButton, new Insets(6));
         bmrButton.setOnAction(e -> calculateBMR());
@@ -288,6 +298,7 @@ public class Main extends Application {
      */
     private Button createClearButton() {
         Button clearButton = new Button("Clear");
+        clearButton.setFont(Font.font("Arial", 12));
         clearButton.setMaxWidth(Double.MAX_VALUE);
         VBox.setMargin(clearButton, new Insets(6));
         clearButton.setOnAction(e -> clearFields());
