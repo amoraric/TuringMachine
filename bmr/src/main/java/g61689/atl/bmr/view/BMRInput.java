@@ -187,8 +187,11 @@ public class BMRInput extends GridPane {
      *
      * @return boolean, true if woman
      */
-    public boolean isWoman() {
-        return female.isSelected();
+    public String selectedGender() {
+        if (male.isSelected()) {
+            return male.getText();
+        }
+        return female.getText();
     }
 
     /**
@@ -196,8 +199,8 @@ public class BMRInput extends GridPane {
      *
      * @return height
      */
-    public int getLifeStyle() {
-        return choiceBox.getSelectionModel().getSelectedIndex();
+    public LifeStyle getLifeStyle() {
+        return choiceBox.getValue();
     }
 
     /**

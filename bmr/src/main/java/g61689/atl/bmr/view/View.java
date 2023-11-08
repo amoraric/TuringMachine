@@ -1,5 +1,7 @@
 package g61689.atl.bmr.view;
 
+import g61689.atl.bmr.model.Person;
+import g61689.atl.util.Observer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,10 +16,11 @@ import javafx.stage.Stage;
 /**
  * View class that initiates the app, creates the ui with buttons and makes calculations
  */
-public class View extends Application {
-    private static final double[] multipliers = {1.2, 1.375, 1.55, 1.725, 1.9};
+public class View extends Application implements Observer {
     private BMRInput bmrInput;
     private BMRResult bmrResult;
+
+    private Person person;
 
     /**
      * Main method to launch the JavaFX application.
@@ -38,6 +41,8 @@ public class View extends Application {
         primaryStage.setTitle("BMR Calculator");
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(290);
+        person = new Person();
+        person.register(this);
         MenuBar menuBar = createMenuBar(primaryStage);
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
@@ -112,21 +117,14 @@ public class View extends Application {
         bmrButton.setFont(Font.font("Arial", 12));
         bmrButton.setMaxWidth(Double.MAX_VALUE);
         VBox.setMargin(bmrButton, new Insets(6));
-        bmrButton.setOnAction(e -> calculateBMR());
+        bmrButton.setOnAction(e -> {
+            if (bmrInput.checkConstraintsTextEmpty() && bmrInput.checkConstraintsTextZero()
+                    && bmrInput.checkConstraintsGender()) {
+                person.set(bmrInput.selectedGender(), bmrInput.getHeightBMR(), bmrInput.getWeightBMR(),
+                        bmrInput.getAgeBMR(), bmrInput.getLifeStyle());
+            }
+        });
         return bmrButton;
-    }
-
-    /**
-     * Handles the logic for calculating the BMR based on user input.
-     */
-    private void calculateBMR() {
-        if (bmrInput.checkConstraintsTextEmpty() && bmrInput.checkConstraintsTextZero()
-                && bmrInput.checkConstraintsGender()) {
-            double bmrRes = calculateBmr();
-            int selectedIndex = bmrInput.getLifeStyle();
-            bmrResult.setBMR(Math.round(bmrRes));
-            bmrResult.setCalories(Math.round(bmrRes * multipliers[selectedIndex]));
-        }
     }
 
     /**
@@ -146,19 +144,12 @@ public class View extends Application {
         return clearButton;
     }
 
-    /**
-     * Calculates the BMR based on user inputs.
-     *
-     * @return The calculated BMR value
-     */
-    private double calculateBmr() {
-        double heightInt = bmrInput.getHeightBMR();
-        double weightInt = bmrInput.getWeightBMR();
-        int ageInt = bmrInput.getAgeBMR();
-        if (bmrInput.isWoman()) {
-            return (9.6 * weightInt + 1.8 * heightInt - 4.7 * ageInt + 655);
-        } else {
-            return (13.7 * weightInt + 5 * heightInt - 6.8 * ageInt + 66);
-        }
+    @Override
+    public void update() {
+        double bmr = person.calculateBmr();
+        double calories = person.calculateCalories();
+
+        bmrResult.setBMR(Math.round(bmr));
+        bmrResult.setCalories(Math.round(calories));
     }
 }
