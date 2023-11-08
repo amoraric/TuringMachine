@@ -40,6 +40,9 @@ public class BMRInput extends GridPane {
         GridPane.setFillWidth(tfdAge, true);
     }
 
+    /**
+     * Creates the height label and text field
+     */
     private void createHeight() {
         Label height = new Label("Height (cm)");
         height.setFont(Font.font("Arial", 12));
@@ -58,6 +61,9 @@ public class BMRInput extends GridPane {
         this.add(tfdHeight, 1, 1);
     }
 
+    /**
+     * Creates the weight label and text field
+     */
     private void createWeight() {
         Label weight = new Label("Weight (kg)");
         weight.setFont(Font.font("Arial", 12));
@@ -75,6 +81,10 @@ public class BMRInput extends GridPane {
         this.add(tfdWeight, 1, 2);
     }
 
+
+    /**
+     * Creates the age label and text field
+     */
     private void createAge() {
         Label age = new Label("Age (years)");
         age.setFont(Font.font("Arial", 12));
@@ -92,6 +102,10 @@ public class BMRInput extends GridPane {
         this.add(tfdAge, 1, 3);
     }
 
+
+    /**
+     * Creates the gender radio buttons
+     */
     private void createGender() {
         Label gender = new Label("Gender");
         gender.setFont(Font.font("Arial", 12));
@@ -114,6 +128,9 @@ public class BMRInput extends GridPane {
         this.add(genderBox, 1, 4); // Add the HBox to the grid
     }
 
+    /**
+     * Creates the lifestyle choice box
+     */
     private void createLifeStyle() {
         Label lifeStyle = new Label("Life Style");
         lifeStyle.setFont(Font.font("Arial", 12));
