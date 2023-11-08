@@ -17,6 +17,9 @@ public class Person implements Observable {
 
     private final List<Observer> observers = new ArrayList<>();
 
+    /**
+     * Default constructor.
+     */
     public Person() {
 
     }
@@ -43,6 +46,15 @@ public class Person implements Observable {
         return calculateBmr() * multipliers[style.ordinal()];
     }
 
+    /**
+     * Sets the attributes of the person that are required for the calculations.
+     *
+     * @param selectedGender male / female
+     * @param height height
+     * @param weight weight
+     * @param age age
+     * @param style lifestyle
+     */
     public void set(String selectedGender, double height, double weight, int age, LifeStyle style) {
         this.selectedGender = selectedGender;
         this.height = height;
