@@ -82,8 +82,7 @@ public class Person implements Observable {
         return false;
     }
 
-    @Override
-    public void notifyObservers() {
+    private void notifyObservers() {
         for (Observer obs : observers) {
             obs.update();
         }

@@ -1,4 +1,4 @@
-package g61689.atl.ascii.model;
+package g61689.atl.util;
 
 /**
  * Command interface

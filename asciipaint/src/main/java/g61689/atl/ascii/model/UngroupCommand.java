@@ -1,5 +1,7 @@
 package g61689.atl.ascii.model;
 
+import g61689.atl.util.Command;
+
 import java.util.List;
 
 public class UngroupCommand implements Command {
@@ -37,7 +39,7 @@ public class UngroupCommand implements Command {
                 drawing.remove(shape);
             }
 
-            drawing.addShape((ColoredShape) groupShape);
+            drawing.addShape((ColoredShape) groupShape); // ajouter au bon endroit, il faut toujours retourner dans l'exact même état du modèle.
         }
     }
 }

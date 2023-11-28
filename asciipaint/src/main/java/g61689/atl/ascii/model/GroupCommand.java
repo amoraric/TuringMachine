@@ -1,6 +1,6 @@
 package g61689.atl.ascii.model;
 
-import java.util.List;
+import g61689.atl.util.Command;
 
 public class GroupCommand implements Command {
     private final Group group;
@@ -29,7 +29,7 @@ public class GroupCommand implements Command {
     @Override
     public void cancel() {
         for (ColoredShape shape : group.getShapes()) {
-            drawing.addShape(shape);
+            drawing.addShape(shape); // remettre les shape au bon endroit.
         }
 
         drawing.remove(group);

@@ -1,5 +1,6 @@
 package g61689.atl.ascii.model;
 
+import g61689.atl.util.Command;
 import g61689.atl.util.CommandManager;
 
 import java.util.List;
@@ -124,7 +125,7 @@ public class AsciiPaint {
         if (number < 0 || number >= drawing.getListSize()) {
             throw new IllegalArgumentException("The index can't be smaller than zero or greater than the size of the list!");
         }
-        drawing.changeColor(number, c);
+        drawing.changeColor(number, c); // command !
     }
 
     /**
@@ -164,7 +165,7 @@ public class AsciiPaint {
      *
      * @param index index
      */
-    public void delete(int index) {
+    public void delete(int index) { // command !
         drawing.remove(index);
     }
 

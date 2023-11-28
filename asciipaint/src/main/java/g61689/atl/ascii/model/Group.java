@@ -52,7 +52,7 @@ public class Group extends ColoredShape {
      * @return list of colored shapes
      */
     public List<ColoredShape> getShapes() {
-        return this.shapes;
+        return new ArrayList<>(shapes);
     }
 
     @Override

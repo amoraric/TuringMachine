@@ -1,5 +1,7 @@
 package g61689.atl.ascii.model;
 
+import g61689.atl.util.Command;
+
 /**
  * This class executes the command add
  */

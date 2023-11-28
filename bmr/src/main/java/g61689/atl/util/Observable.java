@@ -5,5 +5,4 @@ public interface Observable {
 
     boolean unregister(Observer obs);
 
-    void notifyObservers();
 }

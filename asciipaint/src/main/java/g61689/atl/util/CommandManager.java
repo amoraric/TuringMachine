@@ -1,7 +1,5 @@
 package g61689.atl.util;
 
-import g61689.atl.ascii.model.Command;
-
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -24,25 +22,22 @@ public class CommandManager {
      * Undoes the command
      */
     public void undo() {
-        try {
+        if(!undoStack.empty()) {
             Command command = undoStack.pop();
             command.cancel();
             redoStack.push(command);
-        } catch (EmptyStackException e) {
-            System.out.println("The stack is empty, you can't execute that command!");
         }
+
     }
 
     /**
      * Redoes the command
      */
     public void redo() {
-        try {
+        if(!redoStack.empty()) {
             Command command = redoStack.pop();
             command.execute();
             undoStack.push(command);
-        } catch (EmptyStackException e) {
-            System.out.println("The stack is empty, you can't execute that command!");
         }
     }
 }
