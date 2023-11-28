@@ -5,6 +5,7 @@
 # Delete all
 .idea/
 .idea_*
+asciipaint/.idea/
 
 # CMake
 cmake-build-*/
