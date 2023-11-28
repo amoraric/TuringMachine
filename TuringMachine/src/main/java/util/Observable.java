@@ -1,4 +1,4 @@
-package g61689.atl.util;
+package util;
 
 public interface Observable {
     boolean register(Observer obs);

@@ -3,7 +3,7 @@
 
 ### Intellij ###
 # Delete all
-.idea
+.idea/
 .idea_*
 
 # CMake
