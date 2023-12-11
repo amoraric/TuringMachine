@@ -19,6 +19,7 @@ public class Line extends ColoredShape {
     public void move(double dx, double dy) {
         p1.move(dx, dy);
         p2.move(dx, dy);
+        p2.move(dx, dy);
     }
 
     @Override

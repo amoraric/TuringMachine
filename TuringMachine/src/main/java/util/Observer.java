@@ -1,5 +1,5 @@
 package util;
 
 public interface Observer {
-    void update();
+    void update(Observable observable);
 }
