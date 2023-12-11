@@ -38,7 +38,7 @@ public class ModelFacade implements Observable {
     }
 
     public void moveToNextRound() {
-        Command command = new NextRoundCommand(model);
+        Command command = new NextRoundCommand(model, getNumberValidatorsTested(), getAvailableValidators());
         commandManager.newCommand(command);
         notifyObservers();
     }
@@ -85,6 +85,7 @@ public class ModelFacade implements Observable {
      */
     public void undo() {
         commandManager.undo();
+        notifyObservers();
     }
 
     /**
@@ -92,6 +93,7 @@ public class ModelFacade implements Observable {
      */
     public void redo() {
         commandManager.redo();
+        notifyObservers();
     }
 
     @Override

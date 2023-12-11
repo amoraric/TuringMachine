@@ -20,7 +20,7 @@ public class Model {
     Map<Integer, String> roundValidators;
 
     public Model() {
-        this.problems = ProblemLoader.loadProblems("src/main/resources/known_problems.csv");
+        this.problems = ProblemLoader.loadProblems("TuringMachine/src/main/resources/known_problems.csv");
         this.availableValidators = new ArrayList<>();
     }
 
@@ -189,12 +189,10 @@ public class Model {
         }
     }
 
-    public void moveToLastRound() {
+    public void moveToLastRound(int validatorsTested, List<Validator> availableValidators) {
         currentRound--;
-//        validatorsTested ?
-//        for (Validator v : availableValidators) {
-//            v.addDescription("?");
-//        } TODO
+        this. validatorsTested = validatorsTested;
+        this.availableValidators.addAll(availableValidators);
     }
 
     public List<Problem> getAvailableProblems() {

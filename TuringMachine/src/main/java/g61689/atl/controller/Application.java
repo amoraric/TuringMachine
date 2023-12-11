@@ -5,6 +5,7 @@ import g61689.atl.view.ConsoleView;
 import util.Observable;
 import util.Observer;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Application implements Observer {
@@ -32,33 +33,26 @@ public class Application implements Observer {
     }
 
     private void performUserAction() {
-        ConsoleView.getUserActionChoice();
-        int userChoice = scanner.nextInt();
+        try {
+            ConsoleView.getUserActionChoice();
+            int userChoice = scanner.nextInt();
 
-        switch (userChoice) {
-            case 1:
-                setCode();
-                break;
-            case 2:
-                testValidator();
-                break;
-            case 3:
-                moveToNextRound();
-                break;
-            case 4:
-                testCode();
-                break;
-            case 5:
-                endGame();
-                break;
-            default:
-                ConsoleView.displayInvalidActionMessage();
+            switch (userChoice) {
+                case 1 -> setCode();
+                case 2 -> testValidator();
+                case 3 -> moveToNextRound();
+                case 4 -> testCode();
+                case 5 -> modelFacade.finishGame();
+                case 6 -> modelFacade.undo();
+                case 7 -> modelFacade.redo();
+                default -> ConsoleView.displayInvalidActionMessage();
+            }
+        } catch (InputMismatchException e) {
+            ConsoleView.displayInvalidActionMessage();
+            scanner.nextLine();
         }
     }
 
-    private void endGame() {
-        modelFacade.finishGame();
-    }
 
     public static boolean isInteger(String str) {
         try {

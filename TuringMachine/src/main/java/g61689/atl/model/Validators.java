@@ -560,7 +560,7 @@ class Validator20 extends Validator {
         long count = Arrays.stream(codeArray).distinct().count();
         if (count == 3) {
             return "No duplicate";
-        } else if (count == 1) {
+        } else if (count == 2) {
             return "Duplicate";
         } else {
             return "Triplet";

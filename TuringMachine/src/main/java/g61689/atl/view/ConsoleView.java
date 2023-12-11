@@ -47,7 +47,6 @@ public class ConsoleView {
         for (int i = 0; i < validators.size(); i++) {
             System.out.println(i+1 + ". " + validators.get(i).getDescription());
         }
-        System.out.println();
     }
 
     public static void showState(ModelFacade modelFacade) {
@@ -67,7 +66,7 @@ public class ConsoleView {
     }
 
     public static void getUserActionChoice() {
-        System.out.println("Enter your action [1 enter code] [2 test validator] [3 skip] [4 test code] [5 exit] : ");
+        System.out.println("\nEnter your action [1 enter code] [2 test validator] [3 skip] [4 test code] [5 exit] [6 undo] [7 redo] : ");
     }
 
     public static void displayInvalidActionMessage() {
@@ -82,8 +81,8 @@ public class ConsoleView {
         } else {
             System.out.print("Your code DID NOT pass this validator : ");
         }
-        System.out.print(validator.getDescription() + " = ");
-        System.out.println(validator.categorizeCode(userCode) + " ");
+        System.out.println(validator.getDescription());
+        System.out.println("Your category is: " + validator.categorizeCode(userCode));
         return add;
     }
 
