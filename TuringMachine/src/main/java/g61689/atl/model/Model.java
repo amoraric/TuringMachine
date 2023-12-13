@@ -153,7 +153,7 @@ public class Model {
 
     public void chooseValidator(int chosenValidatorIndex) {
         if (chosenValidatorIndex >= 1 && chosenValidatorIndex <= availableValidators.size()) {
-            Validator chosenValidator = availableValidators.get(chosenValidatorIndex-1);
+            Validator chosenValidator = availableValidators.get(chosenValidatorIndex - 1);
             applyValidator(chosenValidator);
         } else {
             System.out.println("Invalid validator.");
@@ -166,10 +166,15 @@ public class Model {
 
     public void applyValidator(Validator validator) {
         String add = ConsoleView.applyValidator(validator, userCode);
+        verifyValidator(validator); // TODO change how this works
         validatorsTested++;
         score++;
         roundValidators.put(currentRound, validator.getDescription());
         validator.addDescription(add);
+    }
+
+    public boolean verifyValidator(Validator validator) {
+        return validator.validate(userCode);
     }
 
     public void undoValidator(int chosenValidatorIndex) {

@@ -20,7 +20,6 @@ public class UIView extends Application implements Observer {
     private Problems problems;
     private ModelFacade modelFacade;
     private Validators validators;
-    private State state;
     private UserCode userCode;
 
     public static void main(String[] args) {
@@ -30,8 +29,8 @@ public class UIView extends Application implements Observer {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Turing Machine");
-        primaryStage.setMinWidth(2200);
-        primaryStage.setMinHeight(1200);
+        primaryStage.setMinWidth(1400);
+        primaryStage.setMinHeight(700);
         modelFacade = new ModelFacade();
         modelFacade.register(this);
         MenuBar menuBar = createMenuBar(primaryStage);
@@ -98,9 +97,9 @@ public class UIView extends Application implements Observer {
 
         // Define the number of rows and their constraints
         RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(40);
+        row1.setPercentHeight(30);
         RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(10);
+        row2.setPercentHeight(20);
         RowConstraints row3 = new RowConstraints();
         row3.setPercentHeight(50);
         uiContainer.getRowConstraints().addAll(row1, row2, row3);
@@ -130,7 +129,7 @@ public class UIView extends Application implements Observer {
             if (modelFacade.isUserCodeSet()) {
                 modelFacade.chooseValidator(chosenValidator);
                 Label ll = new Label("You didn't pass");
-                if (modelFacade.getAvailableValidators().get(chosenValidator).validate(123)) {
+                if (modelFacade.getAvailableValidators().get(chosenValidator).validate()) {
                     ll = new Label("You passed");
                 }
                 uiContainer.add(ll, 0, 1, 3, 1);
@@ -144,7 +143,7 @@ public class UIView extends Application implements Observer {
         }
         uiContainer.getChildren().clear();
 
-        this.state = new State(modelFacade);
+        State state = new State(modelFacade);
         uiContainer.getChildren().add(state);
     }
 }

@@ -35,7 +35,7 @@ public class Validators extends FlowPane implements Observable {
     }
 
     private void setup(ModelFacade modelFacade) {
-        this.setPadding(new Insets(10));
+        this.setPadding(new Insets(1));
         this.setAlignment(Pos.CENTER);
 
         validatorNumbers = modelFacade.getValidatorNumbers();
@@ -51,6 +51,7 @@ public class Validators extends FlowPane implements Observable {
             if (!image.isError()) {
                 ImageView imageView = new ImageView(image);
                 imageView.setPreserveRatio(true);
+                imageView.setFitHeight(130);
                 imageView.setOnMouseClicked(event -> handleImageClick(validatorNo));
                 this.getChildren().add(imageView);
             } else {
