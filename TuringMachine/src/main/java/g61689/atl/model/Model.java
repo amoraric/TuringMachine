@@ -20,8 +20,7 @@ public class Model {
     private Map<Integer, String> roundValidators;
 
     public Model() {
-//        this.problems = ProblemLoader.loadProblems("src/main/resources/known_problems.csv");
-        this.problems = ProblemLoader.loadProblems("TuringMachine/src/main/resources/known_problems.csv");
+        this.problems = ProblemLoader.loadProblems("/known_problems.csv");
         this.availableValidators = new ArrayList<>();
     }
 
@@ -142,11 +141,10 @@ public class Model {
 
         if (userChoice == correctCodeArray) {
             ConsoleView.gameOver(0);
-            gameFinished = true;
         } else {
             ConsoleView.gameOver(1);
-            gameFinished = true;
         }
+        gameFinished = true;
     }
 
     public boolean canApplyValidator() {
@@ -172,7 +170,6 @@ public class Model {
         score++;
         roundValidators.put(currentRound, validator.getDescription());
         validator.addDescription(add);
-
     }
 
     public void undoValidator(int chosenValidatorIndex) {

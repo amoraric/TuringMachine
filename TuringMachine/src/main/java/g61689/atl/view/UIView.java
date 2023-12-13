@@ -6,22 +6,22 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import util.Observable;
 import util.Observer;
 
 public class UIView extends Application implements Observer {
-    private VBox uiContainer;
+    private GridPane uiContainer;
     private Problems problems;
     private ModelFacade modelFacade;
     private Validators validators;
     private State state;
+    private UserCode userCode;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,9 +30,10 @@ public class UIView extends Application implements Observer {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Turing Machine");
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(2200);
+        primaryStage.setMinHeight(1200);
         modelFacade = new ModelFacade();
+        modelFacade.register(this);
         MenuBar menuBar = createMenuBar(primaryStage);
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
@@ -52,8 +53,9 @@ public class UIView extends Application implements Observer {
         return menuBar;
     }
 
-    private VBox createUI() {
-        uiContainer = new VBox();
+    private GridPane createUI() {
+        uiContainer = new GridPane();
+
         HBox hBox = new HBox();
         showProblems();
         hBox.getChildren().addAll(problems);
@@ -70,14 +72,14 @@ public class UIView extends Application implements Observer {
 
     @Override
     public void update(Observable observable) {
-        if (observable instanceof Problems problems) {
-            showValidators();
-        } else if (observable instanceof Validators validators) {
-            showScore();
+        if (observable instanceof Problems) {
+            showGame();
+        } else if (observable instanceof Validators) {
+            testValidator();
         }
     }
 
-    private void showValidators() {
+    private void showGame() {
         if (problems.getChosenProblem() == null || problems.getChosenProblem().isEmpty()) {
             return;
         }
@@ -85,10 +87,55 @@ public class UIView extends Application implements Observer {
 
         uiContainer.getChildren().clear(); // new page
 
+        // Define the number of columns and their constraints
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(33.33);
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setPercentWidth(33.33);
+        ColumnConstraints column3 = new ColumnConstraints();
+        column3.setPercentWidth(33.33);
+        uiContainer.getColumnConstraints().addAll(column1, column2, column3);
+
+        // Define the number of rows and their constraints
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(40);
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(10);
+        RowConstraints row3 = new RowConstraints();
+        row3.setPercentHeight(50);
+        uiContainer.getRowConstraints().addAll(row1, row2, row3);
+
+        showValidators();
+        showEnterCode();
+    }
+
+    private void showValidators() {
         this.validators = new Validators(modelFacade);
         validators.register(this);
 
-        uiContainer.getChildren().add(validators);
+        uiContainer.add(validators, 0, 0, 3, 1);
+    }
+
+    private void showEnterCode() {
+        this.userCode = new UserCode(modelFacade);
+        userCode.register(this);
+
+        uiContainer.add(userCode, 0, 1);
+    }
+
+    private void testValidator() {
+        int chosenValidator = validators.getChosenValidator();
+        System.out.println(chosenValidator);
+        if (modelFacade.canApplyValidator()) {
+            if (modelFacade.isUserCodeSet()) {
+                modelFacade.chooseValidator(chosenValidator);
+                Label ll = new Label("You didn't pass");
+                if (modelFacade.getAvailableValidators().get(chosenValidator).validate(123)) {
+                    ll = new Label("You passed");
+                }
+                uiContainer.add(ll, 0, 1, 3, 1);
+            }
+        }
     }
 
     private void showScore() {

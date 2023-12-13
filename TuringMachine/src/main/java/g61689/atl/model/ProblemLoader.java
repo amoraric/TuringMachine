@@ -2,16 +2,16 @@ package g61689.atl.model;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProblemLoader {
-    public static List<Problem> loadProblems(String filePath) {
+    public static List<Problem> loadProblems(String resourcePath) {
         List<Problem> problems = new ArrayList<>();
 
-        try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath), StandardCharsets.UTF_8)) {
+        // Use getResourceAsStream to read from the classpath
+        try (InputStream is = ProblemLoader.class.getResourceAsStream(resourcePath);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
             // Skip the header line
             reader.readLine();
@@ -37,6 +37,8 @@ public class ProblemLoader {
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.err.println("Resource not found: " + resourcePath);
         }
 
         return problems;

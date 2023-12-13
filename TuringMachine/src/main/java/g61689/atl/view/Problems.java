@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import util.Observable;
@@ -45,7 +46,12 @@ public class Problems extends VBox implements Observable {
         Button chooseButton = createChooseButton();
         Button randomButton = createRandomButton();
 
-        this.getChildren().addAll(problemLabel, problemListView, chooseButton, randomButton);
+        HBox buttonHBox = new HBox();
+        buttonHBox.setAlignment(Pos.CENTER);
+        buttonHBox.setSpacing(50);
+        buttonHBox.getChildren().addAll(chooseButton, randomButton);
+
+        this.getChildren().addAll(problemLabel, problemListView, buttonHBox);
     }
 
     private void updateProblemListView(ListView<String> listView) {
