@@ -18,14 +18,16 @@ import java.util.List;
 import java.util.Random;
 
 public class Problems extends VBox implements Observable {
-    private final List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers;
     private final ListView<String> problemListView;
     private final List<Problem> problems;
     private String chosenProblem;
+    private int chosenProblemIndex;
 
     public Problems(ModelFacade modelFacade) {
         this.problems = modelFacade.getAvailableProblems();
         this.problemListView = new ListView<>();
+        observers = new ArrayList<>();
         setup();
     }
 
@@ -51,6 +53,7 @@ public class Problems extends VBox implements Observable {
                 problems.stream()
                 .map(Problem::getDescription)
                 .toList()));
+        listView.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 12;");
     }
 
     private Button createChooseButton() {
@@ -75,6 +78,7 @@ public class Problems extends VBox implements Observable {
 
     private void handleSelectProblem(ListView<String> listView) {
         chosenProblem = listView.getSelectionModel().getSelectedItem();
+        chosenProblemIndex = listView.getSelectionModel().getSelectedIndex();
         notifyObservers();
     }
 
@@ -82,11 +86,16 @@ public class Problems extends VBox implements Observable {
         Random random = new Random();
         int randomIndex = random.nextInt(problems.size());
         chosenProblem = problems.get(randomIndex).getDescription();
+        chosenProblemIndex = randomIndex;
         notifyObservers();
     }
 
     public String getChosenProblem() {
         return chosenProblem;
+    }
+
+    public int getChosenProblemIndex() {
+        return chosenProblemIndex;
     }
 
     @Override

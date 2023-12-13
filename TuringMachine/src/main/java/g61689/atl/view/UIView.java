@@ -1,6 +1,7 @@
 package g61689.atl.view;
 
 import g61689.atl.model.ModelFacade;
+import g61689.atl.model.Validator;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +20,8 @@ public class UIView extends Application implements Observer {
     private VBox uiContainer;
     private Problems problems;
     private ModelFacade modelFacade;
+    private Validators validators;
+    private State state;
 
     public static void main(String[] args) {
         launch(args);
@@ -69,22 +71,33 @@ public class UIView extends Application implements Observer {
     @Override
     public void update(Observable observable) {
         if (observable instanceof Problems problems) {
-            showProblemDetails(problems.getChosenProblem());
+            showValidators();
+        } else if (observable instanceof Validators validators) {
+            showScore();
         }
     }
 
-    private void showProblemDetails(String problemDescription) {
-        if (problemDescription == null || problemDescription.isEmpty()) {
+    private void showValidators() {
+        if (problems.getChosenProblem() == null || problems.getChosenProblem().isEmpty()) {
             return;
         }
+        modelFacade.startGame(problems.getChosenProblemIndex());
 
-        TextArea problemDetails = new TextArea(problemDescription);
-        problemDetails.setEditable(false);
-        problemDetails.setWrapText(true);
-        problemDetails.setMaxWidth(Double.MAX_VALUE);
-        problemDetails.setMaxHeight(Double.MAX_VALUE);
+        uiContainer.getChildren().clear(); // new page
 
+        this.validators = new Validators(modelFacade);
+        validators.register(this);
+
+        uiContainer.getChildren().add(validators);
+    }
+
+    private void showScore() {
+        if (validators.getValidators() == null) {
+            return;
+        }
         uiContainer.getChildren().clear();
-        uiContainer.getChildren().add(problemDetails);
+
+        this.state = new State(modelFacade);
+        uiContainer.getChildren().add(state);
     }
 }

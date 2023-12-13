@@ -23,7 +23,11 @@ public class ModelFacade implements Observable {
         notifyObservers();
     }
 
-    public void enterCode(int userChoice) {
+    public List<List<Integer>> getValidatorNumbers() {
+        return model.getValidatorNumbers();
+    }
+
+    public void enterCode(int userChoice) {// notify ??
         model.enterCode(userChoice);
     }
 
@@ -70,13 +74,14 @@ public class ModelFacade implements Observable {
     public void setUserCode(int userCode) {
         Command command = new SetCodeCommand(userCode, model);
         commandManager.newCommand(command);
+        // notify ??
     }
 
     public boolean isUserCodeSet() {
         return model.isUserCodeSet();
     }
 
-    public void finishGame() {
+    public void finishGame() { // notify ??
         model.finishGame();
     }
 

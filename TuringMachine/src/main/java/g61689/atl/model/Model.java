@@ -17,10 +17,11 @@ public class Model {
     private int validatorsTested;
     private int userCode;
     private int score;
-    Map<Integer, String> roundValidators;
+    private Map<Integer, String> roundValidators;
 
     public Model() {
-        this.problems = ProblemLoader.loadProblems("src/main/resources/known_problems.csv");
+//        this.problems = ProblemLoader.loadProblems("src/main/resources/known_problems.csv");
+        this.problems = ProblemLoader.loadProblems("TuringMachine/src/main/resources/known_problems.csv");
         this.availableValidators = new ArrayList<>();
     }
 
@@ -161,6 +162,10 @@ public class Model {
         }
     }
 
+    public List<List<Integer>> getValidatorNumbers() {
+        return currentProblem.getValidatorNos();
+    }
+
     public void applyValidator(Validator validator) {
         String add = ConsoleView.applyValidator(validator, userCode);
         validatorsTested++;
@@ -180,6 +185,7 @@ public class Model {
 
     public void moveToNextRound() {
         currentRound++;
+        score += 5;
         validatorsTested = 0;
         for (Validator v : availableValidators) {
             v.removeAddition();
@@ -191,6 +197,7 @@ public class Model {
 
     public void moveToLastRound(int validatorsTested, List<Validator> availableValidators) {
         currentRound--;
+        score -= 5;
         this. validatorsTested = validatorsTested;
         this.availableValidators.addAll(availableValidators);
     }
