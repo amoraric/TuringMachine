@@ -1,7 +1,6 @@
 package g61689.atl.view;
 
 import g61689.atl.model.ModelFacade;
-import g61689.atl.model.Problem;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,13 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import util.Observable;
+import util.Observer;
 
-public class UIView extends Application {
+public class UIView extends Application implements Observer {
+    private VBox uiContainer;
     private Problems problems;
     private ModelFacade modelFacade;
 
@@ -42,26 +44,47 @@ public class UIView extends Application {
         menuBar.setStyle("-fx-font-family: Arial; -fx-font-size: 12;");
         Menu fileMenu = new Menu("File");
         MenuItem exitMenuItem = new MenuItem("Exit");
-        exitMenuItem.setOnAction(e -> primaryStage.close()); // Action to close the application
+        exitMenuItem.setOnAction(e -> primaryStage.close());
         fileMenu.getItems().add(exitMenuItem);
         menuBar.getMenus().add(fileMenu);
         return menuBar;
     }
 
     private VBox createUI() {
-        VBox vBox = new VBox();
+        uiContainer = new VBox();
         HBox hBox = new HBox();
         showProblems();
         hBox.getChildren().addAll(problems);
-        vBox.getChildren().addAll(hBox);
-        return vBox;
+        uiContainer.getChildren().addAll(hBox);
+        return uiContainer;
     }
 
     private void showProblems() {
         problems = new Problems(modelFacade);
+        problems.register(this);
         problems.setAlignment(Pos.CENTER);
         problems.setPadding(new Insets(10));
-        problems.setHgap(5);
-        problems.setVgap(7);
+    }
+
+    @Override
+    public void update(Observable observable) {
+        if (observable instanceof Problems problems) {
+            showProblemDetails(problems.getChosenProblem());
+        }
+    }
+
+    private void showProblemDetails(String problemDescription) {
+        if (problemDescription == null || problemDescription.isEmpty()) {
+            return;
+        }
+
+        TextArea problemDetails = new TextArea(problemDescription);
+        problemDetails.setEditable(false);
+        problemDetails.setWrapText(true);
+        problemDetails.setMaxWidth(Double.MAX_VALUE);
+        problemDetails.setMaxHeight(Double.MAX_VALUE);
+
+        uiContainer.getChildren().clear();
+        uiContainer.getChildren().add(problemDetails);
     }
 }

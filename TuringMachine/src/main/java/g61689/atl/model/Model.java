@@ -20,7 +20,7 @@ public class Model {
     Map<Integer, String> roundValidators;
 
     public Model() {
-        this.problems = ProblemLoader.loadProblems("TuringMachine/src/main/resources/known_problems.csv");
+        this.problems = ProblemLoader.loadProblems("src/main/resources/known_problems.csv");
         this.availableValidators = new ArrayList<>();
     }
 

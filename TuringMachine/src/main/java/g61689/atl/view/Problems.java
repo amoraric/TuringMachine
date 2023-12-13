@@ -2,65 +2,109 @@ package g61689.atl.view;
 
 import g61689.atl.model.ModelFacade;
 import g61689.atl.model.Problem;
-import javafx.geometry.HPos;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import util.Observable;
+import util.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class Problems extends GridPane {
-    private boolean random;
-    private final ModelFacade modelFacade;
+public class Problems extends VBox implements Observable {
+    private final List<Observer> observers = new ArrayList<>();
+    private final ListView<String> problemListView;
+    private final List<Problem> problems;
+    private String chosenProblem;
 
     public Problems(ModelFacade modelFacade) {
-        Label problem = new Label("Choose a problem:");
-        problem.setFont(Font.font("Arial", 12));
-        problem.setUnderline(true);
-        GridPane.setHalignment(problem, HPos.CENTER);
-        this.add(problem, 0, 0);
-
-        this.modelFacade = modelFacade;
-        showProblems();
-        getChoice();
+        this.problems = modelFacade.getAvailableProblems();
+        this.problemListView = new ListView<>();
+        setup();
     }
 
-    private void showProblems() {
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        List<String> addText = new ArrayList<>();
-        for (Problem prob : modelFacade.getAvailableProblems()) {
-            addText.add(prob.getDescription());
+    private void setup() {
+        this.setSpacing(10);
+        this.setPadding(new Insets(10));
+        this.setAlignment(Pos.CENTER);
+
+        Label problemLabel = new Label("Choose a problem:");
+        problemLabel.setFont(Font.font("Arial", 12));
+        problemLabel.setUnderline(true);
+
+        updateProblemListView(problemListView);
+
+        Button chooseButton = createChooseButton();
+        Button randomButton = createRandomButton();
+
+        this.getChildren().addAll(problemLabel, problemListView, chooseButton, randomButton);
+    }
+
+    private void updateProblemListView(ListView<String> listView) {
+        listView.setItems(FXCollections.observableArrayList(
+                problems.stream()
+                .map(Problem::getDescription)
+                .toList()));
+    }
+
+    private Button createChooseButton() {
+        Button button = new Button("Choose");
+        button.setFont(Font.font("Arial", 12));
+        button.setMaxWidth(Double.MAX_VALUE);
+        button.setOnAction(e -> {
+            handleSelectProblem(problemListView);
+        });
+        return button;
+    }
+
+    private Button createRandomButton() {
+        Button button = new Button("Random");
+        button.setFont(Font.font("Arial", 12));
+        button.setMaxWidth(Double.MAX_VALUE);
+        button.setOnAction(e -> {
+            handleRandomProblem();
+        });
+        return button;
+    }
+
+    private void handleSelectProblem(ListView<String> listView) {
+        chosenProblem = listView.getSelectionModel().getSelectedItem();
+        notifyObservers();
+    }
+
+    private void handleRandomProblem() {
+        Random random = new Random();
+        int randomIndex = random.nextInt(problems.size());
+        chosenProblem = problems.get(randomIndex).getDescription();
+        notifyObservers();
+    }
+
+    public String getChosenProblem() {
+        return chosenProblem;
+    }
+
+    @Override
+    public boolean register(Observer obs) {
+        if (!observers.contains(obs)) {
+            return observers.add(obs);
         }
-        textArea.setText(String.join("\n", addText));
-        this.add(textArea, 0, 1);
+        return false;
     }
 
-    private void getChoice() {
-        Button chooseProblem = new Button("Choose the problem");
-        chooseProblem.setFont(Font.font("Arial", 12));
-        chooseProblem.setMaxWidth(Double.MAX_VALUE);
-        VBox.setMargin(chooseProblem, new Insets(6));
-        chooseProblem.setOnAction(e -> {
-            random = false;
-        });
-
-        Button randomButton = new Button("Get a random problem");
-        randomButton.setFont(Font.font("Arial", 12));
-        randomButton.setMaxWidth(Double.MAX_VALUE);
-        VBox.setMargin(randomButton, new Insets(6));
-        randomButton.setOnAction(e -> {
-            random = true;
-        });
-
-        this.add(chooseProblem, 0, 2);
-        this.add(randomButton, 1, 2);
+    @Override
+    public boolean unregister(Observer obs) {
+        return observers.remove(obs);
     }
 
-
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
+    }
 }
