@@ -73,17 +73,33 @@ public class ConsoleView {
         System.out.println("\nInvalid action. Please retry.");
     }
 
-    public static String applyValidator(Validator validator, int userCode) {
-        String add = " -----> X";
-        if (validator.validate(userCode)) {
-            add = " -----> V";
+//    public static String applyValidator(Validator validator, int userCode) {
+//        String add = " -----> X";
+//        if (validator.validate(userCode)) {
+//            add = " -----> V";
+//            System.out.print("Your code passed this validator : ");
+//        } else {
+//            System.out.print("Your code DID NOT pass this validator : ");
+//        }
+//        System.out.println(validator.getDescription());
+//        System.out.println("Your category is: " + validator.categorizeCode(userCode));
+//        return add;
+//    }
+
+    public static void applyValidator(boolean passed) {
+//        String add = " -----> X";
+        if (passed) {
+//            add = " -----> V"; // TODO : remove the addition altogether
             System.out.print("Your code passed this validator : ");
         } else {
             System.out.print("Your code DID NOT pass this validator : ");
         }
+//        return add;
+    }
+
+    public static void printValidator(Validator validator, int userCode) {
         System.out.println(validator.getDescription());
         System.out.println("Your category is: " + validator.categorizeCode(userCode));
-        return add;
     }
 
     public static void gameOver(int state) {

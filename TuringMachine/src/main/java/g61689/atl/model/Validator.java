@@ -11,10 +11,6 @@ public abstract class Validator {
         return description;
     }
 
-    public void addDescription(String add) {
-        this.description += add;
-    }
-
     public void removeAddition() {
         this.description = description.substring(0, description.length() - 9);
     }

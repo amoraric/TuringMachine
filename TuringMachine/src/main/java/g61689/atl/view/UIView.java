@@ -6,11 +6,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import util.Observable;
 import util.Observer;
@@ -30,7 +28,7 @@ public class UIView extends Application implements Observer {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Turing Machine");
         primaryStage.setMinWidth(1400);
-        primaryStage.setMinHeight(700);
+        primaryStage.setMinHeight(800);
         modelFacade = new ModelFacade();
         modelFacade.register(this);
         MenuBar menuBar = createMenuBar(primaryStage);
@@ -59,6 +57,7 @@ public class UIView extends Application implements Observer {
         showProblems();
         hBox.getChildren().addAll(problems);
         uiContainer.getChildren().addAll(hBox);
+        uiContainer.setAlignment(Pos.CENTER);
         return uiContainer;
     }
 
@@ -86,7 +85,6 @@ public class UIView extends Application implements Observer {
 
         uiContainer.getChildren().clear(); // new page
 
-        // Define the number of columns and their constraints
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setPercentWidth(33.33);
         ColumnConstraints column2 = new ColumnConstraints();
@@ -95,14 +93,11 @@ public class UIView extends Application implements Observer {
         column3.setPercentWidth(33.33);
         uiContainer.getColumnConstraints().addAll(column1, column2, column3);
 
-        // Define the number of rows and their constraints
         RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(30);
-        RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(20);
-        RowConstraints row3 = new RowConstraints();
-        row3.setPercentHeight(50);
-        uiContainer.getRowConstraints().addAll(row1, row2, row3);
+        row1.setPercentHeight(40);
+        RowConstraints row4 = new RowConstraints();
+        row4.setPercentHeight(60);
+        uiContainer.getRowConstraints().addAll(row1, row4);
 
         showValidators();
         showEnterCode();
@@ -119,21 +114,31 @@ public class UIView extends Application implements Observer {
         this.userCode = new UserCode(modelFacade);
         userCode.register(this);
 
-        uiContainer.add(userCode, 0, 1);
+        uiContainer.add(userCode, 0, 1, 1, 1);
     }
 
     private void testValidator() {
         int chosenValidator = validators.getChosenValidator();
         System.out.println(chosenValidator);
         if (modelFacade.canApplyValidator()) {
+            System.out.println("can apply");
             if (modelFacade.isUserCodeSet()) {
                 modelFacade.chooseValidator(chosenValidator);
-                Label ll = new Label("You didn't pass");
-                if (modelFacade.getAvailableValidators().get(chosenValidator).validate()) {
-                    ll = new Label("You passed");
+                if (modelFacade.getValidatorState(chosenValidator)) {
+                    validators.setResult(chosenValidator, "You passed!");
+                } else {
+                    validators.setResult(chosenValidator, "You didn't pass!");
                 }
-                uiContainer.add(ll, 0, 1, 3, 1);
             }
+        } else {
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Only 3 validators can be tested per round.");
+            Font font = new Font("Arial", 12);
+            String style = "-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "pt;";
+            alert.getDialogPane().setStyle(style);
+            alert.showAndWait();
         }
     }
 

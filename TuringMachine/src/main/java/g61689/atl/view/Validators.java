@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -19,13 +20,18 @@ import util.Observable;
 import util.Observer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Validators extends FlowPane implements Observable {
     private final List<Observer> observers;
     private final List<Validator> validators;
     private int chosenValidator;
     private List<List<Integer>> validatorNumbers;
+    private Map<Integer, Integer> validatorNumbersOrder = new HashMap<>();
+    private List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
+    private Map<Integer, Label> resultLabels = new HashMap<>();
 
     public Validators(ModelFacade modelFacade) {
         this.validators = modelFacade.getAvailableValidators();
@@ -39,37 +45,75 @@ public class Validators extends FlowPane implements Observable {
         this.setAlignment(Pos.CENTER);
 
         validatorNumbers = modelFacade.getValidatorNumbers();
-
-        addImages();
-    }
-
-    private void addImages() {
-        for (Integer validatorNo : validatorNumbers.get(0)) {
-            String imageName = "/card" + validatorNo + ".png";
-            Image image = new Image(imageName);
-
-            if (!image.isError()) {
-                ImageView imageView = new ImageView(image);
-                imageView.setPreserveRatio(true);
-                imageView.setFitHeight(130);
-                imageView.setOnMouseClicked(event -> handleImageClick(validatorNo));
-                this.getChildren().add(imageView);
-            } else {
-                System.err.println("Error loading image: " + imageName);
-            }
+        for (int i = 0; i < validatorNumbers.get(0).size(); i++) {
+            validatorNumbersOrder.put(validatorNumbers.get(0).get(i), i+1);
         }
     }
 
-    private void handleImageClick(int validatorNo) {
-        this.chosenValidator = validatorNo;
-        notifyObservers();
+    private void addImages() {
+        double availableWidth = this.getWidth() - this.getPadding().getLeft() - this.getPadding().getRight();
+        int numValidators = validatorNumbers.get(0).size();
+        double imageWidth = availableWidth / numValidators - this.getHgap();
+
+        int cc = 0;
+        for (Integer validatorNo : validatorNumbers.get(0)) {
+            String validatorName = "/card" + validatorNo + ".png";
+            String imageRobot = "/robot" + alphabet.get(cc) + ".png";
+            Image validatorImage = new Image(validatorName);
+
+            if (!validatorImage.isError()) {
+                ImageView validatorImageView = new ImageView(validatorImage);
+                validatorImageView.setPreserveRatio(true);
+                validatorImageView.setFitWidth(imageWidth);
+                validatorImageView.setOnMouseClicked(event -> handleImageClick(validatorNo));
+
+                VBox imageBox = new VBox(5);
+                imageBox.setAlignment(Pos.CENTER);
+
+                ImageView robotImageView = new ImageView(imageRobot);
+                robotImageView.setPreserveRatio(true);
+                robotImageView.setFitWidth(imageWidth/5);
+
+                Label letter = new Label(alphabet.get(cc));
+
+                Label resultLabel = new Label("...");
+                resultLabels.put(cc+1, resultLabel);
+
+                TextField tf = new TextField();
+                imageBox.getChildren().addAll(robotImageView, letter, validatorImageView, resultLabel, tf);
+                this.getChildren().add(imageBox);
+            } else {
+                System.err.println("Error loading image: " + validatorName);
+            }
+            cc ++;
+        }
+    }
+
+    public void setResult(int validatorNo, String text) {
+        Label label = resultLabels.get(validatorNo);
+        if (label != null) {
+            label.setText(text);
+        }
     }
 
     private void setupDynamicSpacing() {
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double hgap = Math.max(10, newVal.doubleValue() / 25);
+            double hgap = Math.max(10, newVal.doubleValue() / 100);
             this.setHgap(hgap);
+            this.getChildren().clear();
+            addImages();
         });
+    }
+
+    private void handleImageClick(int validatorNo) {
+        Integer order = validatorNumbersOrder.get(validatorNo);
+        if (order != null) {
+            this.chosenValidator = order;
+            notifyObservers();
+        } else {
+            // Handle the case where the validator number is not found
+            System.err.println("Validator number not found: " + validatorNo);
+        }
     }
 
     public List<Validator> getValidators() {

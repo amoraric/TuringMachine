@@ -4,6 +4,7 @@ import g61689.atl.model.ModelFacade;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,7 +23,8 @@ import java.util.List;
 public class UserCode extends VBox implements Observable {
     private final List<Observer> observers;
     private final Text[] columnTexts = new Text[3];
-    private int[] userCode = new int[3];
+    private final int[] userCode = new int[3];
+    private final Text codeDisplay = new Text();
 
     public UserCode(ModelFacade modelFacade) {
         observers = new ArrayList<>();
@@ -31,28 +33,28 @@ public class UserCode extends VBox implements Observable {
 
     private void setup(ModelFacade modelFacade) {
         this.setPadding(new Insets(10));
+        this.setSpacing(5);
+        this.setAlignment(Pos.TOP_CENTER);
 
-        HBox displayArea = new HBox(0);
-        for (int i = 0; i < columnTexts.length; i++) {
-            columnTexts[i] = new Text("_"); // Initialize with underscore or space
-            displayArea.getChildren().add(columnTexts[i]);
-        }
+        // First Line: Text
+        Text descriptionText = new Text("Enter your code:");
+        this.getChildren().add(descriptionText);
 
+        // Second Line: Code Display
+        this.getChildren().add(codeDisplay);
+
+        // Grid for Shapes and Buttons
         GridPane grid = new GridPane();
         grid.setHgap(10); // Horizontal spacing
         grid.setVgap(10); // Vertical spacing
+        grid.setAlignment(Pos.CENTER);
 
-        // Create geometric figures
-        Polygon triangle = createTriangle();
-        Rectangle square = createSquare();
-        Circle circle = createCircle();
+        // Geometrical Shapes
+        grid.add(createTriangle(), 0, 0);
+        grid.add(createSquare(), 1, 0);
+        grid.add(createCircle(), 2, 0);
 
-        // Adding shapes to the grid
-        grid.add(triangle, 0, 0);
-        grid.add(square, 1, 0);
-        grid.add(circle, 2, 0);
-
-        // Creating buttons for each number
+        // Buttons
         for (int i = 1; i <= 5; i++) {
             for (int j = 0; j < 3; j++) {
                 Button btn = new Button(String.valueOf(i));
@@ -62,11 +64,10 @@ public class UserCode extends VBox implements Observable {
             }
         }
 
-        Button chooseButton = new Button("CHOISISSEZ CE CODE");
-        chooseButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-border-radius: 20; -fx-background-radius: 20;");
-        chooseButton.setPadding(new Insets(1, 2, 1, 2));
-        chooseButton.setMaxWidth(Double.MAX_VALUE);
-        HBox.setMargin(chooseButton, new Insets(1, 0, 0, 0));
+        this.getChildren().add(grid);
+
+        // Enter Button
+        Button chooseButton = new Button("Enter Code");
         chooseButton.setOnAction(e -> {
             StringBuilder code = new StringBuilder();
             for (int cc : userCode) {
@@ -76,14 +77,20 @@ public class UserCode extends VBox implements Observable {
                 modelFacade.setUserCode(Integer.parseInt(code.toString()));
             }
         });
-
-        // Adding components to the root container
-        this.getChildren().addAll(displayArea, grid, chooseButton);
+        this.getChildren().add(chooseButton);
     }
 
     private void buttonPressed(int column, String number) {
-        columnTexts[column].setText(number);
         userCode[column] = Integer.parseInt(number);
+        updateCodeDisplay();
+    }
+
+    private void updateCodeDisplay() {
+        StringBuilder codeBuilder = new StringBuilder();
+        for (int num : userCode) {
+            codeBuilder.append(num);
+        }
+        codeDisplay.setText("Code: " + codeBuilder.toString());
     }
 
     private Polygon createTriangle() {

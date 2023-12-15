@@ -18,6 +18,7 @@ public class Model {
     private int userCode;
     private int score;
     private Map<Integer, String> roundValidators;
+    private Map<Integer, String> validatorsTestedMap;
 
     public Model() {
         this.problems = ProblemLoader.loadProblems("/known_problems.csv");
@@ -148,13 +149,13 @@ public class Model {
     }
 
     public boolean canApplyValidator() {
-        return validatorsTested < 3;
+        return validatorsTestedMap.size() < 3;
     }
 
     public void chooseValidator(int chosenValidatorIndex) {
         if (chosenValidatorIndex >= 1 && chosenValidatorIndex <= availableValidators.size()) {
             Validator chosenValidator = availableValidators.get(chosenValidatorIndex - 1);
-            applyValidator(chosenValidator);
+            applyValidator(chosenValidator, chosenValidatorIndex-1);
         } else {
             System.out.println("Invalid validator.");
         }
@@ -164,43 +165,51 @@ public class Model {
         return currentProblem.getValidatorNos();
     }
 
-    public void applyValidator(Validator validator) {
-        String add = ConsoleView.applyValidator(validator, userCode);
-        verifyValidator(validator); // TODO change how this works
-        validatorsTested++;
+    public void applyValidator(Validator validator, int chosenValidatorIndex) {
+//        String add = ConsoleView.applyValidator(validator.validate(userCode));
+        ConsoleView.applyValidator(validator.validate(userCode));
+//        validator.addDescription(add);
+        ConsoleView.printValidator(validator, userCode);
         score++;
+        validatorsTestedMap.put(chosenValidatorIndex, validator.getDescription());
         roundValidators.put(currentRound, validator.getDescription());
-        validator.addDescription(add);
+//        validator.addDescription(add);
     }
 
-    public boolean verifyValidator(Validator validator) {
-        return validator.validate(userCode);
+    public Map<Integer, String> getValidatorsTestedMap() {
+        return validatorsTestedMap;
+    }
+
+    public boolean getValidatorState(int chosenValidator) {
+        return availableValidators.get(chosenValidator-1).validate(userCode);
     }
 
     public void undoValidator(int chosenValidatorIndex) {
-        validatorsTested--;
         score--;
         Validator chosenValidator = availableValidators.get(chosenValidatorIndex-1);
+        validatorsTestedMap.remove(chosenValidatorIndex, chosenValidator.getDescription());
         roundValidators.remove(currentRound, chosenValidator.getDescription());
-        chosenValidator.removeAddition();
+//        chosenValidator.removeAddition();
     }
 
     public void moveToNextRound() {
         currentRound++;
         score += 5;
-        validatorsTested = 0;
-        for (Validator v : availableValidators) {
-            v.removeAddition();
-        }
+//        validatorsTested = 0;
+        validatorsTestedMap.clear();
+//        for (Validator v : availableValidators) {
+//            v.removeAddition();
+//        }
         if (currentRound > MAX_ROUNDS) {
             gameFinished = true;
         }
     }
 
-    public void moveToLastRound(int validatorsTested, List<Validator> availableValidators) {
+    public void moveToLastRound(Map<Integer, String> validatorsTestedMap, List<Validator> availableValidators) {
         currentRound--;
         score -= 5;
-        this. validatorsTested = validatorsTested;
+//        this. validatorsTested = validatorsTested;
+        this.validatorsTestedMap = validatorsTestedMap;
         this.availableValidators.addAll(availableValidators);
     }
 
@@ -219,7 +228,8 @@ public class Model {
                 currentRound = 0;
                 score = 0;
                 userCode = -1;
-                validatorsTested = 0;
+//                validatorsTested = 0;
+                this.validatorsTestedMap = new HashMap<>();
                 roundValidators = new HashMap<>();
                 gameFinished = false;
             }
