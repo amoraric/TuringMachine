@@ -43,10 +43,6 @@ public class ModelFacade implements Observable {
         notifyObservers();
     }
 
-    public boolean getValidatorState(int chosenValidator) {
-        return model.getValidatorState(chosenValidator);
-    }
-
     public void moveToNextRound() {
         Command command = new NextRoundCommand(model, model.getValidatorsTestedMap(), getAvailableValidators());
         commandManager.newCommand(command);

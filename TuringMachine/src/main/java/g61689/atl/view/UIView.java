@@ -71,19 +71,7 @@ public class UIView extends Application implements Observer {
 
             uiContainer.getChildren().clear(); // new page
 
-            ColumnConstraints column1 = new ColumnConstraints();
-            column1.setPercentWidth(33.33);
-            ColumnConstraints column2 = new ColumnConstraints();
-            column2.setPercentWidth(33.33);
-            ColumnConstraints column3 = new ColumnConstraints();
-            column3.setPercentWidth(33.33);
-            uiContainer.getColumnConstraints().addAll(column1, column2, column3);
-
-            RowConstraints row1 = new RowConstraints();
-            row1.setPercentHeight(40);
-            RowConstraints row4 = new RowConstraints();
-            row4.setPercentHeight(60);
-            uiContainer.getRowConstraints().addAll(row1, row4);
+            applyGameUIConstraints();
 
             showValidators();
             showEnterCode();
@@ -93,62 +81,45 @@ public class UIView extends Application implements Observer {
         }
     }
 
+    private void applyGameUIConstraints() {
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(33.33);
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setPercentWidth(33.33);
+        ColumnConstraints column3 = new ColumnConstraints();
+        column3.setPercentWidth(33.33);
+        uiContainer.getColumnConstraints().addAll(column1, column2, column3);
+
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(40);
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(60);
+        uiContainer.getRowConstraints().addAll(row1, row2);
+    }
+
     private void showValidators() {
         this.validators = new Validators(modelFacade);
-        validators.register(this);
 
         uiContainer.add(validators, 0, 0, 3, 1);
     }
 
     private void showEnterCode() {
-        VBox userCodeContainer = new VBox(10);
-        UserCode userCode = new UserCode(modelFacade, false);
-        userCode.register(this);
-        Button undo = new UndoRedo(modelFacade, true);
-        undo.setAlignment(Pos.CENTER);
-        userCodeContainer.setAlignment(Pos.CENTER);
-        userCodeContainer.getChildren().addAll(userCode, undo);
-
-        VBox finalCodeContainer = new VBox(10);
-        UserCode enterFinalCode = new UserCode(modelFacade, true);
-        enterFinalCode.register(this);
-        Button redo = new UndoRedo(modelFacade, false);
-        redo.setAlignment(Pos.CENTER);
-        finalCodeContainer.setAlignment(Pos.CENTER);
-        finalCodeContainer.getChildren().addAll(enterFinalCode, redo);
+        VBox userCodeContainer = getUserCodeInterface(false, true);
+        VBox finalCodeContainer = getUserCodeInterface(true, false);
 
         uiContainer.add(userCodeContainer, 0, 1, 1, 1);
         uiContainer.add(finalCodeContainer, 2, 1, 1, 1);
     }
 
-    private void testValidator() {
-        int chosenValidator = validators.getChosenValidator();
-        System.out.println(chosenValidator);
-        if (modelFacade.canApplyValidator()) {
-            if (modelFacade.isUserCodeSet()) {
-                modelFacade.chooseValidator(chosenValidator);
-                if (modelFacade.getValidatorState(chosenValidator)) {
-                    validators.setResult(chosenValidator, "You passed!");
-                } else {
-                    validators.setResult(chosenValidator, "You didn't pass!");
-                }
-            } else {
-                popupMessage("Error", "You have to set a code first.");
-            }
-        } else {
-            popupMessage("Error", "Only 3 validators can be tested per round.");
-        }
-    }
-
-    public static void popupMessage(String title, String message) {
-        Alert alert=new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        Font font = new Font("Arial", 12);
-        String style = "-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "pt;";
-        alert.getDialogPane().setStyle(style);
-        alert.showAndWait();
+    private VBox getUserCodeInterface(boolean isFinalCode, boolean isLeft) {
+        VBox userCodeContainer = new VBox(10);
+        UserCode userCode = new UserCode(modelFacade, isFinalCode);
+        userCode.register(this);
+        Button undo = new UndoRedo(modelFacade, isLeft);
+        undo.setAlignment(Pos.CENTER);
+        userCodeContainer.setAlignment(Pos.CENTER);
+        userCodeContainer.getChildren().addAll(userCode, undo);
+        return userCodeContainer;
     }
 
     private void showState() {
@@ -167,6 +138,17 @@ public class UIView extends Application implements Observer {
         stateContainer.getChildren().addAll(skipButton, state, quitButton);
 
         uiContainer.add(stateContainer, 1, 1);
+    }
+
+    public static void popupMessage(String title, String message) {
+        Alert alert=new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Font font = new Font("Arial", 12);
+        String style = "-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "pt;";
+        alert.getDialogPane().setStyle(style);
+        alert.showAndWait();
     }
 
     private Button getButton(String text) {
@@ -193,8 +175,6 @@ public class UIView extends Application implements Observer {
     public void update(Observable observable) {
         if (observable instanceof Problems) {
             showGame();
-        } else if (observable instanceof Validators) {
-            testValidator();
         } else if (observable instanceof UserCode) {
             if (modelFacade.getUserResult()) {
                 popupMessage("Game finished", "You won!");

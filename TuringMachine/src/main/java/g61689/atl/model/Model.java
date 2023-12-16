@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Model {
-    int MAX_ROUNDS = 10;
     private List<Problem> problems;
     private Problem currentProblem;
     private int currentRound;
@@ -195,10 +194,6 @@ public class Model {
         return validatorsTestedMap;
     }
 
-    public boolean getValidatorState(int chosenValidator) {
-        return availableValidators.get(chosenValidator-1).validate(userCode);
-    }
-
     public void undoValidator(int chosenValidatorIndex) {
         score--;
         validatorsTestedMap.remove(chosenValidatorIndex-1);
@@ -209,9 +204,6 @@ public class Model {
         currentRound++;
         score += 5;
         validatorsTestedMap.clear();
-        if (currentRound > MAX_ROUNDS) {
-            gameFinished = true;
-        }
     }
 
     public void moveToLastRound(Map<Integer, Boolean> validatorsTestedMap, List<Validator> availableValidators) {
@@ -250,7 +242,6 @@ public class Model {
         currentRound = 0;
         gameFinished = false;
         userCode = 0;
-        guessCode = 0;
         guessCode = 0;
         score = 0;
         availableValidators.clear();
