@@ -18,13 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UserCode extends VBox implements Observable {
+public class UserCode extends VBox implements Observable, Observer {
     private final List<Observer> observers;
-    private final int[] userCode = new int[3];
+    private int[] userCode = new int[3];
     private final Text codeDisplay = new Text();
+    private final ModelFacade modelFacade;
+    private final boolean isFinalCode;
 
     public UserCode(ModelFacade modelFacade, boolean isFinalCode) {
         observers = new ArrayList<>();
+        this.modelFacade = modelFacade;
+        this.isFinalCode = isFinalCode;
+        modelFacade.register(this);
         setup(modelFacade, isFinalCode);
     }
 
@@ -139,6 +144,31 @@ public class UserCode extends VBox implements Observable {
         return circle;
     }
 
+    private void updateResultsBasedOnState() {
+        if (isFinalCode) {
+            if (!modelFacade.isGuessCodeSet()) {
+                this.userCode = new int[3];
+            } else {
+                int guessCode = modelFacade.getGuessCode();
+                updateUserCodeArray(guessCode);
+            }
+        } else {
+            if (!modelFacade.isUserCodeSet()) {
+                this.userCode = new int[3];
+            } else {
+                int userCode = modelFacade.getUserCode();
+                updateUserCodeArray(userCode);
+            }
+        }
+        updateCodeDisplay();
+    }
+
+    private void updateUserCodeArray(int code) {
+        this.userCode[0] = code / 100;
+        this.userCode[1] = (code / 10) % 10;
+        this.userCode[2] = code % 10;
+    }
+
     @Override
     public boolean register(Observer obs) {
         if (!observers.contains(obs)) {
@@ -155,6 +185,13 @@ public class UserCode extends VBox implements Observable {
     private void notifyObservers() {
         for (Observer observer : observers) {
             observer.update(this);
+        }
+    }
+
+    @Override
+    public void update(Observable observable) {
+        if (observable instanceof ModelFacade) {
+            updateResultsBasedOnState();
         }
     }
 }

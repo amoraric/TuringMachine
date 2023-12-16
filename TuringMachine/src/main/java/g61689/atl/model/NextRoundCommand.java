@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class NextRoundCommand implements Command {
     private final Model model;
-    private final Map<Integer, String> validatorsTestedMap;
+    private final Map<Integer, Boolean> validatorsTestedMap;
     private final List<Validator> availableValidators;
-    public NextRoundCommand(Model model, Map<Integer, String> validatorsTestedMap, List<Validator> availableValidators) {
+    public NextRoundCommand(Model model, Map<Integer, Boolean> validatorsTestedMap, List<Validator> availableValidators) {
         this.model = model;
         this.validatorsTestedMap = validatorsTestedMap;
         this.availableValidators = availableValidators;

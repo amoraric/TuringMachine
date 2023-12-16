@@ -7,6 +7,7 @@ import util.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ModelFacade implements Observable {
     private final Model model;
@@ -72,8 +73,20 @@ public class ModelFacade implements Observable {
         return model.getValidatorsTestedMap().size();
     }
 
+    public Map<Integer, Boolean> getValidatorsTestedMap() {
+        return model.getValidatorsTestedMap();
+    }
+
     public int getRoundsPlayed() {
         return model.getRoundsPlayed();
+    }
+
+    public int getUserCode() {
+        return model.getUserCode();
+    }
+
+    public int getGuessCode() {
+        return model.getGuessCode();
     }
 
     public List<Validator> getAvailableValidators() {
@@ -88,6 +101,10 @@ public class ModelFacade implements Observable {
 
     public boolean isUserCodeSet() {
         return model.isUserCodeSet();
+    }
+
+    public boolean isGuessCodeSet() {
+        return model.isGuessCodeSet();
     }
 
     public void finishGame() {
@@ -143,4 +160,3 @@ public class ModelFacade implements Observable {
         }
     }
 }
-

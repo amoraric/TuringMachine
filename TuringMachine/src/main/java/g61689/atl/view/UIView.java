@@ -101,14 +101,24 @@ public class UIView extends Application implements Observer {
     }
 
     private void showEnterCode() {
+        VBox userCodeContainer = new VBox(10);
         UserCode userCode = new UserCode(modelFacade, false);
         userCode.register(this);
+        Button undo = new UndoRedo(modelFacade, true);
+        undo.setAlignment(Pos.CENTER);
+        userCodeContainer.setAlignment(Pos.CENTER);
+        userCodeContainer.getChildren().addAll(userCode, undo);
 
+        VBox finalCodeContainer = new VBox(10);
         UserCode enterFinalCode = new UserCode(modelFacade, true);
         enterFinalCode.register(this);
+        Button redo = new UndoRedo(modelFacade, false);
+        redo.setAlignment(Pos.CENTER);
+        finalCodeContainer.setAlignment(Pos.CENTER);
+        finalCodeContainer.getChildren().addAll(enterFinalCode, redo);
 
-        uiContainer.add(userCode, 0, 1, 1, 1);
-        uiContainer.add(enterFinalCode, 2, 1, 1, 1);
+        uiContainer.add(userCodeContainer, 0, 1, 1, 1);
+        uiContainer.add(finalCodeContainer, 2, 1, 1, 1);
     }
 
     private void testValidator() {

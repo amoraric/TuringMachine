@@ -16,20 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Validators extends FlowPane implements Observable {
+public class Validators extends FlowPane implements Observable, Observer {
     private final List<Observer> observers;
     private int chosenValidator;
     private List<List<Integer>> validatorNumbers;
     private final List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
     private final Map<Integer, ImageView> resultImages = new HashMap<>();
+    private final ModelFacade modelFacade;
 
     public Validators(ModelFacade modelFacade) {
         observers = new ArrayList<>();
-        setup(modelFacade);
+        this.modelFacade = modelFacade;
+        modelFacade.register(this);
+        setup();
         setupDynamicSpacing();
     }
 
-    private void setup(ModelFacade modelFacade) {
+    private void setup() {
         this.setPadding(new Insets(1));
         this.setAlignment(Pos.CENTER);
 
@@ -98,6 +101,24 @@ public class Validators extends FlowPane implements Observable {
         }
     }
 
+    private void updateResultsBasedOnState() {
+        Map<Integer, Boolean> validatorsTested = modelFacade.getValidatorsTestedMap();
+        clearResults();
+        for (Integer ss : validatorsTested.keySet()) {
+            String res = getResultImagePath(validatorsTested.get(ss));
+            Image img = new Image(res);
+            resultImages.get(ss+1).setImage(img);
+        }
+    }
+
+    private String getResultImagePath(Boolean result) {
+        if (result) {
+            return "/correct.png";
+        } else {
+            return "/incorrect.png";
+        }
+    }
+
     private void setupDynamicSpacing() {
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
             this.setHgap(Math.max(10, newVal.doubleValue() / 100));
@@ -131,6 +152,13 @@ public class Validators extends FlowPane implements Observable {
     private void notifyObservers() {
         for (Observer observer : observers) {
             observer.update(this);
+        }
+    }
+
+    @Override
+    public void update(Observable observable) {
+        if (observable instanceof ModelFacade) {
+            updateResultsBasedOnState();
         }
     }
 }

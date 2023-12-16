@@ -15,9 +15,10 @@ public class Model {
     private boolean gameFinished;
     private final List<Validator> availableValidators;
     private int userCode;
+    private int guessCode;
     private int score;
     private Map<Integer, String> roundValidators;
-    private Map<Integer, String> validatorsTestedMap;
+    private Map<Integer, Boolean> validatorsTestedMap;
     private boolean userWon;
 
     public Model() {
@@ -121,12 +122,28 @@ public class Model {
         this.userCode = userCode;
     }
 
+    public int getUserCode() {
+        return userCode;
+    }
+
     public void removeUserCode() {
-        this.userCode = -1;
+        this.userCode = 0;
     }
 
     public boolean isUserCodeSet() {
-        return userCode != -1;
+        return userCode != 0;
+    }
+
+    public void setGuessCode(int guessCode) {
+        this.guessCode = guessCode;
+    }
+
+    public int getGuessCode() {
+        return guessCode;
+    }
+
+    public boolean isGuessCodeSet() {
+        return userCode != 0;
     }
 
     public void finishGame() {
@@ -170,11 +187,11 @@ public class Model {
     public void applyValidator(Validator validator, int chosenValidatorIndex) {
         ConsoleView.applyValidator(validator, validator.validate(userCode));
         score++;
-        validatorsTestedMap.put(chosenValidatorIndex, validator.getDescription());
+        validatorsTestedMap.put(chosenValidatorIndex, validator.validate(userCode));
         roundValidators.put(currentRound, validator.getDescription());
     }
 
-    public Map<Integer, String> getValidatorsTestedMap() {
+    public Map<Integer, Boolean> getValidatorsTestedMap() {
         return validatorsTestedMap;
     }
 
@@ -184,9 +201,8 @@ public class Model {
 
     public void undoValidator(int chosenValidatorIndex) {
         score--;
-        Validator chosenValidator = availableValidators.get(chosenValidatorIndex-1);
-        validatorsTestedMap.remove(chosenValidatorIndex, chosenValidator.getDescription());
-        roundValidators.remove(currentRound, chosenValidator.getDescription());
+        validatorsTestedMap.remove(chosenValidatorIndex-1);
+        roundValidators.remove(currentRound);
     }
 
     public void moveToNextRound() {
@@ -198,7 +214,7 @@ public class Model {
         }
     }
 
-    public void moveToLastRound(Map<Integer, String> validatorsTestedMap, List<Validator> availableValidators) {
+    public void moveToLastRound(Map<Integer, Boolean> validatorsTestedMap, List<Validator> availableValidators) {
         currentRound--;
         score -= 5;
         this.validatorsTestedMap = validatorsTestedMap;
@@ -221,7 +237,8 @@ public class Model {
             availableValidators.addAll(initializeValidators(selectedProblem));
             currentRound = 0;
             score = 0;
-            userCode = -1;
+            userCode = 0;
+            guessCode = 0;
             this.validatorsTestedMap = new HashMap<>();
             roundValidators = new HashMap<>();
             gameFinished = false;
@@ -232,7 +249,9 @@ public class Model {
         currentProblem = null;
         currentRound = 0;
         gameFinished = false;
-        userCode = -1;
+        userCode = 0;
+        guessCode = 0;
+        guessCode = 0;
         score = 0;
         availableValidators.clear();
         validatorsTestedMap.clear();
