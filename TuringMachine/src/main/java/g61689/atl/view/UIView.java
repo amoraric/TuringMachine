@@ -12,12 +12,21 @@ import javafx.stage.Stage;
 import util.Observable;
 import util.Observer;
 
+/**
+ * Main user interface class for the Turing Machine game using JavaFX.
+ * This class sets up and displays the graphical user interface for the game.
+ */
 public class UIView extends Application implements Observer {
     private GridPane uiContainer;
     private Problems problems;
     private ModelFacade modelFacade;
     private Validators validators;
 
+    /**
+     * Main method to launch the JavaFX application.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -36,6 +45,9 @@ public class UIView extends Application implements Observer {
         primaryStage.show();
     }
 
+    /**
+     * Sets up the initial state and components of the UI.
+     */
     private void setup() {
         modelFacade = new ModelFacade();
         modelFacade.register(this);
@@ -43,6 +55,9 @@ public class UIView extends Application implements Observer {
         createUI();
     }
 
+    /**
+     * Creates the main UI layout and components.
+     */
     private void createUI() {
         problems = new Problems(modelFacade);
         problems.register(this);
@@ -54,6 +69,12 @@ public class UIView extends Application implements Observer {
         uiContainer.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Creates the menu bar for the UI.
+     *
+     * @param primaryStage The primary stage of the application.
+     * @return A MenuBar object.
+     */
     private MenuBar createMenuBar(Stage primaryStage) {
         MenuBar menuBar = new MenuBar();
         menuBar.setStyle("-fx-font-family: Arial; -fx-font-size: 12;");
@@ -65,6 +86,9 @@ public class UIView extends Application implements Observer {
         return menuBar;
     }
 
+    /**
+     * Displays the game UI, allowing user interaction with the game.
+     */
     private void showGame() {
         try {
             modelFacade.startGame(problems.getChosenProblemIndex());
@@ -81,6 +105,9 @@ public class UIView extends Application implements Observer {
         }
     }
 
+    /**
+     * Applies layout constraints for the game UI.
+     */
     private void applyGameUIConstraints() {
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setPercentWidth(33.33);
@@ -97,12 +124,18 @@ public class UIView extends Application implements Observer {
         uiContainer.getRowConstraints().addAll(row1, row2);
     }
 
+    /**
+     * Displays the validators interface in the game UI.
+     */
     private void showValidators() {
         this.validators = new Validators(modelFacade);
 
         uiContainer.add(validators, 0, 0, 3, 1);
     }
 
+    /**
+     * Displays the interface for entering the user code.
+     */
     private void showEnterCode() {
         VBox userCodeContainer = getUserCodeInterface(false, true);
         VBox finalCodeContainer = getUserCodeInterface(true, false);
@@ -111,6 +144,13 @@ public class UIView extends Application implements Observer {
         uiContainer.add(finalCodeContainer, 2, 1, 1, 1);
     }
 
+    /**
+     * Creates a user code interface box.
+     *
+     * @param isFinalCode Specifies if the interface is for the final code.
+     * @param isLeft      Specifies if the interface is on the left side.
+     * @return A VBox containing the user code interface.
+     */
     private VBox getUserCodeInterface(boolean isFinalCode, boolean isLeft) {
         VBox userCodeContainer = new VBox(10);
         UserCode userCode = new UserCode(modelFacade, isFinalCode);
@@ -122,6 +162,9 @@ public class UIView extends Application implements Observer {
         return userCodeContainer;
     }
 
+    /**
+     * Displays the current state of the game, including controls and status.
+     */
     private void showState() {
         State state = new State(modelFacade);
 
@@ -140,6 +183,12 @@ public class UIView extends Application implements Observer {
         uiContainer.add(stateContainer, 1, 1);
     }
 
+    /**
+     * Creates and displays a popup message window.
+     *
+     * @param title   The title of the popup window.
+     * @param message The message to be displayed.
+     */
     public static void popupMessage(String title, String message) {
         Alert alert=new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -151,6 +200,12 @@ public class UIView extends Application implements Observer {
         alert.showAndWait();
     }
 
+    /**
+     * Creates a button with specified text.
+     *
+     * @param text The text to display on the button.
+     * @return A Button object.
+     */
     private Button getButton(String text) {
         Button button = new Button(text);
         button.setPrefHeight(40);
@@ -160,6 +215,9 @@ public class UIView extends Application implements Observer {
         return button;
     }
 
+    /**
+     * Resets the game to its initial state and updates the UI.
+     */
     private void resetGame() {
         modelFacade.resetGame();
         uiContainer.getChildren().clear();

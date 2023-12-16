@@ -1,16 +1,19 @@
 package util;
 
 /**
- * Command interface
+ * Represents a command in the command pattern.
+ * This interface defines the structure for classes that encapsulate a command or an action.
  */
 public interface Command {
     /**
-     * Executes a command
+     * Executes the command.
+     * Implementing classes should define the specific execution logic here.
      */
     void execute();
 
     /**
-     * Cancels a command
+     * Cancels or undoes the command.
+     * Implementing classes should define the logic for undoing the action performed by execute().
      */
     void cancel();
 }

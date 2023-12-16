@@ -5,7 +5,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for loading problem data from a resource file.
+ */
 public class ProblemLoader {
+    /**
+     * Loads problems from a specified resource path.
+     *
+     * @param resourcePath The path to the resource file containing problem data.
+     * @return A list of problems loaded from the file.
+     */
     public static List<Problem> loadProblems(String resourcePath) {
         List<Problem> problems = new ArrayList<>();
 

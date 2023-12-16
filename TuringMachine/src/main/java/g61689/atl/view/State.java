@@ -9,6 +9,10 @@ import javafx.scene.text.Font;
 import util.Observable;
 import util.Observer;
 
+/**
+ * Represents the state display in the Turing Machine game UI.
+ * This class is responsible for showing the current game state, such as score, validators used, and rounds played.
+ */
 public class State extends GridPane implements Observer {
     private final int score;
     private final int validatorsUsed;
@@ -18,6 +22,11 @@ public class State extends GridPane implements Observer {
     private Label validatorsUsedLabel;
     private Label roundsPlayedLabel;
 
+    /**
+     * Constructs a State panel with a given model facade.
+     *
+     * @param modelFacade The model facade to fetch game state data.
+     */
     public State(ModelFacade modelFacade) {
         this.modelFacade = modelFacade;
         modelFacade.register(this);
@@ -27,6 +36,9 @@ public class State extends GridPane implements Observer {
         setup();
     }
 
+    /**
+     * Sets up the initial layout and components of the state panel.
+     */
     private void setup() {
         this.getStyleClass().add("state-panel");
         this.setPadding(new Insets(10));
@@ -55,6 +67,9 @@ public class State extends GridPane implements Observer {
         }
     }
 
+    /**
+     * Refreshes the state display to reflect the current game state.
+     */
     private void refreshState() {
         scoreLabel.setText("Score: " + modelFacade.getScore());
         validatorsUsedLabel.setText("Validators used: " + modelFacade.getNumberValidatorsTested());

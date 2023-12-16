@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ * Represents the user code input interface in the Turing Machine game UI.
+ * This class allows users to enter and submit a code for validation in the game.
+ */
 public class UserCode extends VBox implements Observable, Observer {
     private final List<Observer> observers;
     private int[] userCode = new int[3];
@@ -25,6 +30,12 @@ public class UserCode extends VBox implements Observable, Observer {
     private final ModelFacade modelFacade;
     private final boolean isFinalCode;
 
+    /**
+     * Constructs a UserCode interface with a given model facade.
+     *
+     * @param modelFacade The model facade to interact with the game model.
+     * @param isFinalCode Indicates whether this interface is for the final guess.
+     */
     public UserCode(ModelFacade modelFacade, boolean isFinalCode) {
         observers = new ArrayList<>();
         this.modelFacade = modelFacade;
@@ -33,6 +44,12 @@ public class UserCode extends VBox implements Observable, Observer {
         setup(modelFacade, isFinalCode);
     }
 
+    /**
+     * Sets up the initial layout and components of the user code interface.
+     *
+     * @param modelFacade The model facade used in the setup.
+     * @param isFinalCode Indicates whether this setup is for the final guess.
+     */
     private void setup(ModelFacade modelFacade, boolean isFinalCode) {
         this.setPadding(new Insets(10));
         this.setSpacing(5);
@@ -76,6 +93,13 @@ public class UserCode extends VBox implements Observable, Observer {
         this.getChildren().add(chooseButton);
     }
 
+    /**
+     * Creates a button for submitting the user code.
+     *
+     * @param modelFacade The model facade used for submitting the code.
+     * @param buttonText  The text displayed on the button.
+     * @return A Button for submitting the code.
+     */
     private Button getButton(ModelFacade modelFacade, String buttonText) {
         Button chooseButton = new Button(buttonText);
         chooseButton.setOnAction(e -> {
@@ -105,6 +129,14 @@ public class UserCode extends VBox implements Observable, Observer {
         return chooseButton;
     }
 
+    /**
+     * Handles the event of pressing a number button for code entry.
+     *
+     * @param column       The column of the entered number.
+     * @param number       The number entered by the user.
+     * @param modelFacade  The model facade used in the game.
+     * @param buttonText   The text displayed on the button.
+     */
     private void buttonPressed(int column, String number, ModelFacade modelFacade, String buttonText) {
         if (Objects.equals(buttonText, "Guess code")) {
             userCode[column] = Integer.parseInt(number);
@@ -117,6 +149,9 @@ public class UserCode extends VBox implements Observable, Observer {
         }
     }
 
+    /**
+     * Updates the display to show the current user code.
+     */
     private void updateCodeDisplay() {
         StringBuilder codeBuilder = new StringBuilder();
         for (int num : userCode) {
@@ -125,6 +160,11 @@ public class UserCode extends VBox implements Observable, Observer {
         codeDisplay.setText("Code: " + codeBuilder);
     }
 
+    /**
+     * Creates a triangle shape.
+     *
+     * @return A Polygon object representing a triangle.
+     */
     private Polygon createTriangle() {
         Polygon triangle = new Polygon();
         triangle.getPoints().addAll(10.0, 0.0, 20.0, 20.0, 0.0, 20.0);
@@ -132,18 +172,31 @@ public class UserCode extends VBox implements Observable, Observer {
         return triangle;
     }
 
+    /**
+     * Creates a square shape.
+     *
+     * @return A Rectangle object representing a square.
+     */
     private Rectangle createSquare() {
         Rectangle square = new Rectangle(20, 20);
         square.setFill(Color.ORANGE);
         return square;
     }
 
+    /**
+     * Creates a circle shape.
+     *
+     * @return A Circle object representing a circle.
+     */
     private Circle createCircle() {
         Circle circle = new Circle(10);
         circle.setFill(Color.PURPLE);
         return circle;
     }
 
+    /**
+     * Updates the user code based on the current state of the game.
+     */
     private void updateResultsBasedOnState() {
         if (isFinalCode) {
             if (!modelFacade.isGuessCodeSet()) {
@@ -163,6 +216,11 @@ public class UserCode extends VBox implements Observable, Observer {
         updateCodeDisplay();
     }
 
+    /**
+     * Updates the internal user code array based on a given code.
+     *
+     * @param code The code used to update the user code array.
+     */
     private void updateUserCodeArray(int code) {
         this.userCode[0] = code / 100;
         this.userCode[1] = (code / 10) % 10;
@@ -182,16 +240,19 @@ public class UserCode extends VBox implements Observable, Observer {
         return observers.remove(obs);
     }
 
-    private void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update(this);
-        }
-    }
-
     @Override
     public void update(Observable observable) {
         if (observable instanceof ModelFacade) {
             updateResultsBasedOnState();
+        }
+    }
+
+    /**
+     * Notifies all registered observers of any changes.
+     */
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
         }
     }
 }

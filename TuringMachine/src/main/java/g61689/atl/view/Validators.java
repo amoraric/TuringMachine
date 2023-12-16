@@ -16,12 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the validators section in the Turing Machine game UI.
+ * This class is responsible for displaying validator images and handling user interactions with them.
+ */
 public class Validators extends FlowPane implements Observer {
     private List<List<Integer>> validatorNumbers;
     private final List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
     private final Map<Integer, ImageView> resultImages = new HashMap<>();
     private final ModelFacade modelFacade;
 
+    /**
+     * Constructs a Validators pane with a given model facade.
+     *
+     * @param modelFacade The model facade to be used for game logic.
+     */
     public Validators(ModelFacade modelFacade) {
         this.modelFacade = modelFacade;
         modelFacade.register(this);
@@ -29,6 +38,9 @@ public class Validators extends FlowPane implements Observer {
         setupDynamicSpacing();
     }
 
+    /**
+     * Sets up initial properties and layout of the validators pane.
+     */
     private void setup() {
         this.setPadding(new Insets(1));
         this.setAlignment(Pos.CENTER);
@@ -36,6 +48,9 @@ public class Validators extends FlowPane implements Observer {
         validatorNumbers = modelFacade.getValidatorNumbers();
     }
 
+    /**
+     * Adds validator images to the pane dynamically based on available width.
+     */
     private void addImages() {
         double availableWidth = this.getWidth() - this.getPadding().getLeft() - this.getPadding().getRight();
         int numValidators = validatorNumbers.get(0).size();
@@ -78,12 +93,18 @@ public class Validators extends FlowPane implements Observer {
         }
     }
 
+    /**
+     * Clears the result images from the validators.
+     */
     public void clearResults() {
         for (ImageView imageView : resultImages.values()) {
             imageView.setImage(null);
         }
     }
 
+    /**
+     * Updates the result images based on the current game state.
+     */
     private void updateResultsBasedOnState() {
         Map<Integer, Boolean> validatorsTested = modelFacade.getValidatorsTestedMap();
         clearResults();
@@ -94,6 +115,12 @@ public class Validators extends FlowPane implements Observer {
         }
     }
 
+    /**
+     * Generates a path to the result image based on the validation result.
+     *
+     * @param result The result of the validation.
+     * @return The path to the corresponding result image.
+     */
     private String getResultImagePath(Boolean result) {
         if (result) {
             return "/correct.png";
@@ -102,6 +129,9 @@ public class Validators extends FlowPane implements Observer {
         }
     }
 
+    /**
+     * Sets up dynamic spacing for the validators pane based on its width.
+     */
     private void setupDynamicSpacing() {
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
             this.setHgap(Math.max(10, newVal.doubleValue() / 100));
@@ -110,6 +140,11 @@ public class Validators extends FlowPane implements Observer {
         });
     }
 
+    /**
+     * Handles click events on validator images.
+     *
+     * @param chosenValidator The index of the clicked validator.
+     */
     private void handleImageClick(int chosenValidator) {
         if (modelFacade.canApplyValidator()) {
             if (modelFacade.isUserCodeSet()) {
