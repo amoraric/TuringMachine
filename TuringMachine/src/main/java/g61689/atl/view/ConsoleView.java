@@ -73,17 +73,13 @@ public class ConsoleView {
         System.out.println("\nInvalid action. Please retry.");
     }
 
-    public static void applyValidator(boolean passed) {
+    public static void applyValidator(Validator validator, boolean passed) {
         if (passed) {
             System.out.print("Your code passed this validator : ");
         } else {
             System.out.print("Your code DID NOT pass this validator : ");
         }
-    }
-
-    public static void printValidator(Validator validator, int userCode) {
         System.out.println(validator.getDescription());
-        System.out.println("Your category is: " + validator.categorizeCode(userCode));
     }
 
     public static void gameOver(int state) {

@@ -168,8 +168,7 @@ public class Model {
     }
 
     public void applyValidator(Validator validator, int chosenValidatorIndex) {
-        ConsoleView.applyValidator(validator.validate(userCode));
-        ConsoleView.printValidator(validator, userCode);
+        ConsoleView.applyValidator(validator, validator.validate(userCode));
         score++;
         validatorsTestedMap.put(chosenValidatorIndex, validator.getDescription());
         roundValidators.put(currentRound, validator.getDescription());

@@ -28,6 +28,6 @@ public class Problem {
     }
 
     public String getDescription() {
-        return String.format("Problem %d - Difficulty: %d, Luck: %d, Code: %s", number, difficulty, luck, code);
+        return String.format("Problem %d - Difficulty: %d, Luck: %d", number, difficulty, luck);
     }
 }
