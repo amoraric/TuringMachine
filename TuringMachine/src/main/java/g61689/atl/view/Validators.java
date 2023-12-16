@@ -21,7 +21,7 @@ public class Validators extends FlowPane implements Observable {
     private int chosenValidator;
     private List<List<Integer>> validatorNumbers;
     private final List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
-    private final Map<Integer, Label> resultLabels = new HashMap<>();
+    private final Map<Integer, ImageView> resultImages = new HashMap<>();
 
     public Validators(ModelFacade modelFacade) {
         observers = new ArrayList<>();
@@ -63,11 +63,13 @@ public class Validators extends FlowPane implements Observable {
 
                 Label letter = new Label(alphabet.get(cc));
 
-                Label resultLabel = new Label("...");
-                resultLabels.put(cc+1, resultLabel);
+                ImageView resultImageView = new ImageView();
+                resultImageView.setPreserveRatio(true);
+                resultImageView.setFitWidth(30);
+                resultImages.put(cc+1, resultImageView);
 
                 TextField tf = new TextField();
-                imageBox.getChildren().addAll(robotImageView, letter, validatorImageView, resultLabel, tf);
+                imageBox.getChildren().addAll(robotImageView, letter, validatorImageView, resultImageView, tf);
                 this.getChildren().add(imageBox);
             } else {
                 System.err.println("Error loading image: " + validatorName);
@@ -77,9 +79,22 @@ public class Validators extends FlowPane implements Observable {
     }
 
     public void setResult(int validatorNo, String text) {
-        Label label = resultLabels.get(validatorNo);
-        if (label != null) {
-            label.setText(text);
+        ImageView imageView = resultImages.get(validatorNo);
+        if (imageView != null) {
+            String imagePath;
+            if ("You passed!".equals(text)) {
+                imagePath = "/correct.png";
+            } else {
+                imagePath = "/incorrect.png";
+            }
+            Image image = new Image(imagePath);
+            imageView.setImage(image);
+        }
+    }
+
+    public void clearResults() {
+        for (ImageView imageView : resultImages.values()) {
+            imageView.setImage(null);
         }
     }
 

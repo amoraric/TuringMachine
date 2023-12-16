@@ -147,9 +147,7 @@ public class UIView extends Application implements Observer {
         Button skipButton = getButton("Skip Round");
         skipButton.setOnAction(event -> {
             modelFacade.moveToNextRound();
-            for (int i = 0; i < modelFacade.getAvailableValidators().size(); i++) {
-                validators.setResult(i, "...");
-            }
+            validators.clearResults();
         });
         Button quitButton = getButton("Restart Game");
         quitButton.setOnAction(event -> resetGame());
