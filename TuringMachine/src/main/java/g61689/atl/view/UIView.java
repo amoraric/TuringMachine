@@ -8,17 +8,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import util.Observable;
 import util.Observer;
+
+import java.util.Objects;
 
 public class UIView extends Application implements Observer {
     private GridPane uiContainer;
     private Problems problems;
     private ModelFacade modelFacade;
     private Validators validators;
-    private UserCode userCode;
 
     public static void main(String[] args) {
         launch(args);
@@ -28,15 +30,32 @@ public class UIView extends Application implements Observer {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Turing Machine");
         primaryStage.setMinWidth(1400);
-        primaryStage.setMinHeight(800);
-        modelFacade = new ModelFacade();
-        modelFacade.register(this);
+        primaryStage.setMinHeight(900);
+        setup();
         MenuBar menuBar = createMenuBar(primaryStage);
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
-        root.setCenter(createUI());
+        root.setCenter(uiContainer);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+    }
+
+    private void setup() {
+        modelFacade = new ModelFacade();
+        modelFacade.register(this);
+        uiContainer = new GridPane();
+        createUI();
+    }
+
+    private void createUI() {
+        problems = new Problems(modelFacade);
+        problems.register(this);
+
+        uiContainer.getChildren().clear();
+        HBox hBox = new HBox(problems);
+        hBox.setAlignment(Pos.CENTER);
+        uiContainer.getChildren().add(hBox);
+        uiContainer.setAlignment(Pos.CENTER);
     }
 
     private MenuBar createMenuBar(Stage primaryStage) {
@@ -50,57 +69,32 @@ public class UIView extends Application implements Observer {
         return menuBar;
     }
 
-    private GridPane createUI() {
-        uiContainer = new GridPane();
-
-        HBox hBox = new HBox();
-        showProblems();
-        hBox.getChildren().addAll(problems);
-        uiContainer.getChildren().addAll(hBox);
-        uiContainer.setAlignment(Pos.CENTER);
-        return uiContainer;
-    }
-
-    private void showProblems() {
-        problems = new Problems(modelFacade);
-        problems.register(this);
-        problems.setAlignment(Pos.CENTER);
-        problems.setPadding(new Insets(10));
-    }
-
-    @Override
-    public void update(Observable observable) {
-        if (observable instanceof Problems) {
-            showGame();
-        } else if (observable instanceof Validators) {
-            testValidator();
-        }
-    }
-
     private void showGame() {
-        if (problems.getChosenProblem() == null || problems.getChosenProblem().isEmpty()) {
-            return;
+        try {
+            modelFacade.startGame(problems.getChosenProblemIndex());
+
+            uiContainer.getChildren().clear(); // new page
+
+            ColumnConstraints column1 = new ColumnConstraints();
+            column1.setPercentWidth(33.33);
+            ColumnConstraints column2 = new ColumnConstraints();
+            column2.setPercentWidth(33.33);
+            ColumnConstraints column3 = new ColumnConstraints();
+            column3.setPercentWidth(33.33);
+            uiContainer.getColumnConstraints().addAll(column1, column2, column3);
+
+            RowConstraints row1 = new RowConstraints();
+            row1.setPercentHeight(40);
+            RowConstraints row4 = new RowConstraints();
+            row4.setPercentHeight(60);
+            uiContainer.getRowConstraints().addAll(row1, row4);
+
+            showValidators();
+            showEnterCode();
+            showState();
+        } catch (IllegalArgumentException e) {
+            popupMessage("Error", e.getMessage());
         }
-        modelFacade.startGame(problems.getChosenProblemIndex());
-
-        uiContainer.getChildren().clear(); // new page
-
-        ColumnConstraints column1 = new ColumnConstraints();
-        column1.setPercentWidth(33.33);
-        ColumnConstraints column2 = new ColumnConstraints();
-        column2.setPercentWidth(33.33);
-        ColumnConstraints column3 = new ColumnConstraints();
-        column3.setPercentWidth(33.33);
-        uiContainer.getColumnConstraints().addAll(column1, column2, column3);
-
-        RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(40);
-        RowConstraints row4 = new RowConstraints();
-        row4.setPercentHeight(60);
-        uiContainer.getRowConstraints().addAll(row1, row4);
-
-        showValidators();
-        showEnterCode();
     }
 
     private void showValidators() {
@@ -111,10 +105,14 @@ public class UIView extends Application implements Observer {
     }
 
     private void showEnterCode() {
-        this.userCode = new UserCode(modelFacade);
+        UserCode userCode = new UserCode(modelFacade, false);
         userCode.register(this);
 
+        UserCode enterFinalCode = new UserCode(modelFacade, true);
+        enterFinalCode.register(this);
+
         uiContainer.add(userCode, 0, 1, 1, 1);
+        uiContainer.add(enterFinalCode, 2, 1, 1, 1);
     }
 
     private void testValidator() {
@@ -131,24 +129,73 @@ public class UIView extends Application implements Observer {
                 }
             }
         } else {
-            Alert alert=new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Only 3 validators can be tested per round.");
-            Font font = new Font("Arial", 12);
-            String style = "-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "pt;";
-            alert.getDialogPane().setStyle(style);
-            alert.showAndWait();
+            popupMessage("Error", "Only 3 validators can be tested per round.");
         }
     }
 
-    private void showScore() {
-        if (validators.getValidators() == null) {
-            return;
-        }
+    public static void popupMessage(String title, String message) {
+        Alert alert=new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Font font = new Font("Arial", 12);
+        String style = "-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "pt;";
+        alert.getDialogPane().setStyle(style);
+        alert.showAndWait();
+    }
+
+    private void showState() {
+        State state = new State(modelFacade);
+
+        Button skipButton = getButton("Skip Round");
+        skipButton.setOnAction(event -> {
+            modelFacade.moveToNextRound();
+        });
+        Button quitButton = getButton("Restart Game");
+        quitButton.setOnAction(event -> {
+            resetGame();
+        });
+
+        VBox stateContainer = new VBox(20);
+        stateContainer.setAlignment(Pos.CENTER);
+        stateContainer.getChildren().addAll(skipButton, state, quitButton);
+
+        uiContainer.add(stateContainer, 1, 1);
+    }
+
+    private Button getButton(String text) {
+        Button button = new Button(text);
+        button.setPrefHeight(40);
+        button.setMaxWidth(200);
+        button.setAlignment(Pos.CENTER);
+        VBox.setMargin(button, new Insets(20));
+        return button;
+    }
+
+    private void resetGame() {
+        modelFacade.resetGame();
         uiContainer.getChildren().clear();
 
-        State state = new State(modelFacade);
-        uiContainer.getChildren().add(state);
+        uiContainer.getColumnConstraints().clear();
+        uiContainer.getRowConstraints().clear();
+        uiContainer.setAlignment(Pos.CENTER);
+
+        createUI();
+    }
+
+    @Override
+    public void update(Observable observable) {
+        if (observable instanceof Problems) {
+            showGame();
+        } else if (observable instanceof Validators) {
+            testValidator();
+        } else if (observable instanceof UserCode) {
+            if (modelFacade.getUserResult()) {
+                popupMessage("Game finished", "You won!");
+            } else {
+                popupMessage("Game finished", "You lost!");
+            }
+            resetGame();
+        }
     }
 }

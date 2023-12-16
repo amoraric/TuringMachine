@@ -27,8 +27,9 @@ public class ModelFacade implements Observable {
         return model.getValidatorNumbers();
     }
 
-    public void enterCode(int userChoice) {// notify ??
+    public void enterCode(int userChoice) {
         model.enterCode(userChoice);
+        notifyObservers(); // TODO : check this notify
     }
 
     public boolean canApplyValidator() {
@@ -59,12 +60,16 @@ public class ModelFacade implements Observable {
         return model.isGameFinished();
     }
 
+    public boolean getUserResult() {
+        return model.getUserResult();
+    }
+
     public int getScore() {
         return model.getScore();
     }
 
     public int getNumberValidatorsTested() {
-        return model.getNumberValidatorsTested();
+        return model.getValidatorsTestedMap().size();
     }
 
     public int getRoundsPlayed() {
@@ -78,15 +83,24 @@ public class ModelFacade implements Observable {
     public void setUserCode(int userCode) {
         Command command = new SetCodeCommand(userCode, model);
         commandManager.newCommand(command);
-        // notify ??
+        notifyObservers(); // TODO : check this notify
     }
 
     public boolean isUserCodeSet() {
         return model.isUserCodeSet();
     }
 
-    public void finishGame() { // notify ??
+    public void finishGame() {
         model.finishGame();
+        notifyObservers(); // TODO : check this notify
+    }
+
+    public void resetGame() {
+        model.reset();
+
+        commandManager.clearCommands();
+
+        notifyObservers();
     }
 
     /**

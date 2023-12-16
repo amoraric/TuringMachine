@@ -5,8 +5,6 @@ import g61689.atl.util.CommandManager;
 
 import java.util.List;
 
-// TODO : remember the index for each shape for the group and for the undo redo
-
 /**
  * Facade of the model that allows to modify it.
  */

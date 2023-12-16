@@ -122,7 +122,6 @@ public class Application implements Observer {
     @Override
     public void update(Observable observable) {
         if (observable instanceof ModelFacade) {
-            ModelFacade modelFacade = (ModelFacade) observable;
             ConsoleView.showState(modelFacade);
         }
     }

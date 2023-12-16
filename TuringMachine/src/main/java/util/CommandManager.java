@@ -40,4 +40,12 @@ public class CommandManager {
             undoStack.push(command);
         }
     }
+
+    /**
+     * Clears the history of commands.
+     */
+    public void clearCommands() {
+        undoStack.clear();
+        redoStack.clear();
+    }
 }

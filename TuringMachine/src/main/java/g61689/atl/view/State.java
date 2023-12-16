@@ -4,6 +4,7 @@ import g61689.atl.model.ModelFacade;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -11,30 +12,58 @@ import javafx.scene.text.Font;
 import util.Observable;
 import util.Observer;
 
-public class State extends GridPane {
+import java.util.ArrayList;
+import java.util.List;
+
+public class State extends GridPane implements Observer {
     private final int score;
     private final int validatorsUsed;
+    private final int roundsPlayed;
+    private final ModelFacade modelFacade;
+    private Label scoreLabel;
+    private Label validatorsUsedLabel;
+    private Label roundsPlayedLabel;
 
     public State(ModelFacade modelFacade) {
+        this.modelFacade = modelFacade;
+        modelFacade.register(this);
         this.score = modelFacade.getScore();
         this.validatorsUsed = modelFacade.getNumberValidatorsTested();
+        this.roundsPlayed = modelFacade.getRoundsPlayed();
         setup();
     }
 
     private void setup() {
+        this.getStyleClass().add("state-panel");
         this.setPadding(new Insets(10));
+        this.setVgap(10);
+        this.setHgap(20);
         this.setAlignment(Pos.CENTER);
 
-        Label scoreLabel = new Label("Score: " + score);
-        scoreLabel.setFont(Font.font("Arial", 12));
-        scoreLabel.setUnderline(true);
+        scoreLabel = new Label("Score: " + score);
+        scoreLabel.setFont(Font.font("Arial", 18));
+
+        validatorsUsedLabel = new Label("Validators used: " + validatorsUsed);
+        validatorsUsedLabel.setFont(Font.font("Arial", 18));
+
+        roundsPlayedLabel = new Label("Rounds played: " + roundsPlayed);
+        roundsPlayedLabel.setFont(Font.font("Arial", 18));
 
         this.add(scoreLabel, 0, 0);
+        this.add(validatorsUsedLabel, 1, 0);
+        this.add(roundsPlayedLabel, 2, 0);
+    }
 
-        Label validatorsUsedLabel = new Label("Validators used: " + validatorsUsed);
-        validatorsUsedLabel.setFont(Font.font("Arial", 12));
-        validatorsUsedLabel.setUnderline(true);
+    @Override
+    public void update(Observable observable) {
+        if (observable instanceof ModelFacade) {
+            refreshState();
+        }
+    }
 
-        this.add(validatorsUsedLabel, 0, 1);
+    private void refreshState() {
+        scoreLabel.setText("Score: " + modelFacade.getScore());
+        validatorsUsedLabel.setText("Validators used: " + modelFacade.getNumberValidatorsTested());
+        roundsPlayedLabel.setText("Rounds played: " + modelFacade.getRoundsPlayed());
     }
 }

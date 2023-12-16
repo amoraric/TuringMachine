@@ -29,9 +29,8 @@ public class Validators extends FlowPane implements Observable {
     private final List<Validator> validators;
     private int chosenValidator;
     private List<List<Integer>> validatorNumbers;
-    private Map<Integer, Integer> validatorNumbersOrder = new HashMap<>();
-    private List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
-    private Map<Integer, Label> resultLabels = new HashMap<>();
+    private final List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
+    private final Map<Integer, Label> resultLabels = new HashMap<>();
 
     public Validators(ModelFacade modelFacade) {
         this.validators = modelFacade.getAvailableValidators();
@@ -45,9 +44,6 @@ public class Validators extends FlowPane implements Observable {
         this.setAlignment(Pos.CENTER);
 
         validatorNumbers = modelFacade.getValidatorNumbers();
-        for (int i = 0; i < validatorNumbers.get(0).size(); i++) {
-            validatorNumbersOrder.put(validatorNumbers.get(0).get(i), i+1);
-        }
     }
 
     private void addImages() {
@@ -65,7 +61,8 @@ public class Validators extends FlowPane implements Observable {
                 ImageView validatorImageView = new ImageView(validatorImage);
                 validatorImageView.setPreserveRatio(true);
                 validatorImageView.setFitWidth(imageWidth);
-                validatorImageView.setOnMouseClicked(event -> handleImageClick(validatorNo));
+                int finalCc = cc+1;
+                validatorImageView.setOnMouseClicked(event -> handleImageClick(finalCc));
 
                 VBox imageBox = new VBox(5);
                 imageBox.setAlignment(Pos.CENTER);
@@ -105,15 +102,9 @@ public class Validators extends FlowPane implements Observable {
         });
     }
 
-    private void handleImageClick(int validatorNo) {
-        Integer order = validatorNumbersOrder.get(validatorNo);
-        if (order != null) {
-            this.chosenValidator = order;
-            notifyObservers();
-        } else {
-            // Handle the case where the validator number is not found
-            System.err.println("Validator number not found: " + validatorNo);
-        }
+    private void handleImageClick(int chosenValidator) {
+        this.chosenValidator = chosenValidator;
+        notifyObservers();
     }
 
     public List<Validator> getValidators() {

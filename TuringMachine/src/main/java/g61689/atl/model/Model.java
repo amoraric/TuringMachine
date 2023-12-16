@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class Model {
     int MAX_ROUNDS = 10;
-    private final List<Problem> problems;
+    private List<Problem> problems;
     private Problem currentProblem;
     private int currentRound;
     private boolean gameFinished;
     private final List<Validator> availableValidators;
-    private int validatorsTested;
     private int userCode;
     private int score;
     private Map<Integer, String> roundValidators;
     private Map<Integer, String> validatorsTestedMap;
+    private boolean userWon;
 
     public Model() {
         this.problems = ProblemLoader.loadProblems("/known_problems.csv");
@@ -109,10 +109,6 @@ public class Model {
         return score;
     }
 
-    public int getNumberValidatorsTested() {
-        return validatorsTested;
-    }
-
     public int getRoundsPlayed() {
         return currentRound;
     }
@@ -141,11 +137,17 @@ public class Model {
         int correctCodeArray = currentProblem.getCode();
 
         if (userChoice == correctCodeArray) {
+            userWon = true;
             ConsoleView.gameOver(0);
         } else {
+            userWon = false;
             ConsoleView.gameOver(1);
         }
         gameFinished = true;
+    }
+
+    public boolean getUserResult() {
+        return userWon;
     }
 
     public boolean canApplyValidator() {
@@ -166,14 +168,11 @@ public class Model {
     }
 
     public void applyValidator(Validator validator, int chosenValidatorIndex) {
-//        String add = ConsoleView.applyValidator(validator.validate(userCode));
         ConsoleView.applyValidator(validator.validate(userCode));
-//        validator.addDescription(add);
         ConsoleView.printValidator(validator, userCode);
         score++;
         validatorsTestedMap.put(chosenValidatorIndex, validator.getDescription());
         roundValidators.put(currentRound, validator.getDescription());
-//        validator.addDescription(add);
     }
 
     public Map<Integer, String> getValidatorsTestedMap() {
@@ -189,17 +188,12 @@ public class Model {
         Validator chosenValidator = availableValidators.get(chosenValidatorIndex-1);
         validatorsTestedMap.remove(chosenValidatorIndex, chosenValidator.getDescription());
         roundValidators.remove(currentRound, chosenValidator.getDescription());
-//        chosenValidator.removeAddition();
     }
 
     public void moveToNextRound() {
         currentRound++;
         score += 5;
-//        validatorsTested = 0;
         validatorsTestedMap.clear();
-//        for (Validator v : availableValidators) {
-//            v.removeAddition();
-//        }
         if (currentRound > MAX_ROUNDS) {
             gameFinished = true;
         }
@@ -208,7 +202,6 @@ public class Model {
     public void moveToLastRound(Map<Integer, String> validatorsTestedMap, List<Validator> availableValidators) {
         currentRound--;
         score -= 5;
-//        this. validatorsTested = validatorsTested;
         this.validatorsTestedMap = validatorsTestedMap;
         this.availableValidators.addAll(availableValidators);
     }
@@ -217,25 +210,36 @@ public class Model {
         return new ArrayList<>(problems);
     }
 
-    public void startGame(int selectedProblemIndex) {
-        if (selectedProblemIndex >= 0 && selectedProblemIndex < problems.size()) {
-            Problem selectedProblem = problems.get(selectedProblemIndex);
-
-            if (currentRound != 1 || gameFinished) {
-                currentProblem = selectedProblem;
-                availableValidators.clear();
-                availableValidators.addAll(initializeValidators(selectedProblem));
-                currentRound = 0;
-                score = 0;
-                userCode = -1;
-//                validatorsTested = 0;
-                this.validatorsTestedMap = new HashMap<>();
-                roundValidators = new HashMap<>();
-                gameFinished = false;
-            }
-        } else {
-            System.out.println("Problem not found.");
+    public void startGame(int selectedProblemIndex) throws IllegalArgumentException {
+        if (selectedProblemIndex < 0 || selectedProblemIndex >= problems.size()) {
+            throw new IllegalArgumentException("Problem not found.");
         }
+        Problem selectedProblem = problems.get(selectedProblemIndex);
+
+        if (currentRound != 1 || gameFinished) {
+            currentProblem = selectedProblem;
+            availableValidators.clear();
+            availableValidators.addAll(initializeValidators(selectedProblem));
+            currentRound = 0;
+            score = 0;
+            userCode = -1;
+            this.validatorsTestedMap = new HashMap<>();
+            roundValidators = new HashMap<>();
+            gameFinished = false;
+        }
+    }
+
+    public void reset() {
+        currentProblem = null;
+        currentRound = 0;
+        gameFinished = false;
+        userCode = -1;
+        score = 0;
+        availableValidators.clear();
+        validatorsTestedMap.clear();
+        roundValidators.clear();
+
+        problems = ProblemLoader.loadProblems("/known_problems.csv");
     }
 
     public boolean isGameFinished() {
