@@ -22,7 +22,6 @@ public class Problems extends VBox implements Observable {
     private final List<Observer> observers;
     private final ListView<String> problemListView;
     private final List<Problem> problems;
-    private String chosenProblem;
     private int chosenProblemIndex;
 
     public Problems(ModelFacade modelFacade) {
@@ -83,21 +82,14 @@ public class Problems extends VBox implements Observable {
     }
 
     private void handleSelectProblem(ListView<String> listView) {
-        chosenProblem = listView.getSelectionModel().getSelectedItem();
         chosenProblemIndex = listView.getSelectionModel().getSelectedIndex();
         notifyObservers();
     }
 
     private void handleRandomProblem() {
         Random random = new Random();
-        int randomIndex = random.nextInt(problems.size());
-        chosenProblem = problems.get(randomIndex).getDescription();
-        chosenProblemIndex = randomIndex;
+        chosenProblemIndex = random.nextInt(problems.size());
         notifyObservers();
-    }
-
-    public String getChosenProblem() {
-        return chosenProblem;
     }
 
     public int getChosenProblemIndex() {

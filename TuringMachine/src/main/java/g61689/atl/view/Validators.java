@@ -1,21 +1,13 @@
 package g61689.atl.view;
 
 import g61689.atl.model.ModelFacade;
-import g61689.atl.model.Problem;
-import g61689.atl.model.Validator;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import util.Observable;
 import util.Observer;
 
@@ -26,14 +18,12 @@ import java.util.Map;
 
 public class Validators extends FlowPane implements Observable {
     private final List<Observer> observers;
-    private final List<Validator> validators;
     private int chosenValidator;
     private List<List<Integer>> validatorNumbers;
     private final List<String> alphabet = new ArrayList<>(List.of("A", "B", "C", "D", "E", "F", "G"));
     private final Map<Integer, Label> resultLabels = new HashMap<>();
 
     public Validators(ModelFacade modelFacade) {
-        this.validators = modelFacade.getAvailableValidators();
         observers = new ArrayList<>();
         setup(modelFacade);
         setupDynamicSpacing();
@@ -95,8 +85,7 @@ public class Validators extends FlowPane implements Observable {
 
     private void setupDynamicSpacing() {
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double hgap = Math.max(10, newVal.doubleValue() / 100);
-            this.setHgap(hgap);
+            this.setHgap(Math.max(10, newVal.doubleValue() / 100));
             this.getChildren().clear();
             addImages();
         });
@@ -105,10 +94,6 @@ public class Validators extends FlowPane implements Observable {
     private void handleImageClick(int chosenValidator) {
         this.chosenValidator = chosenValidator;
         notifyObservers();
-    }
-
-    public List<Validator> getValidators() {
-        return validators;
     }
 
     public int getChosenValidator() {

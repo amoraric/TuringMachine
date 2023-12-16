@@ -1,20 +1,16 @@
 package g61689.atl.view;
 
 import g61689.atl.model.ModelFacade;
-import g61689.atl.model.Validator;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import util.Observable;
 import util.Observer;
-
-import java.util.Objects;
 
 public class UIView extends Application implements Observer {
     private GridPane uiContainer;
@@ -119,7 +115,6 @@ public class UIView extends Application implements Observer {
         int chosenValidator = validators.getChosenValidator();
         System.out.println(chosenValidator);
         if (modelFacade.canApplyValidator()) {
-            System.out.println("can apply");
             if (modelFacade.isUserCodeSet()) {
                 modelFacade.chooseValidator(chosenValidator);
                 if (modelFacade.getValidatorState(chosenValidator)) {
@@ -127,6 +122,8 @@ public class UIView extends Application implements Observer {
                 } else {
                     validators.setResult(chosenValidator, "You didn't pass!");
                 }
+            } else {
+                popupMessage("Error", "You have to set a code first.");
             }
         } else {
             popupMessage("Error", "Only 3 validators can be tested per round.");
@@ -150,11 +147,12 @@ public class UIView extends Application implements Observer {
         Button skipButton = getButton("Skip Round");
         skipButton.setOnAction(event -> {
             modelFacade.moveToNextRound();
+            for (int i = 0; i < modelFacade.getAvailableValidators().size(); i++) {
+                validators.setResult(i, "...");
+            }
         });
         Button quitButton = getButton("Restart Game");
-        quitButton.setOnAction(event -> {
-            resetGame();
-        });
+        quitButton.setOnAction(event -> resetGame());
 
         VBox stateContainer = new VBox(20);
         stateContainer.setAlignment(Pos.CENTER);

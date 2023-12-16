@@ -29,7 +29,7 @@ public class ModelFacade implements Observable {
 
     public void enterCode(int userChoice) {
         model.enterCode(userChoice);
-        notifyObservers(); // TODO : check this notify
+        notifyObservers();
     }
 
     public boolean canApplyValidator() {
@@ -83,7 +83,7 @@ public class ModelFacade implements Observable {
     public void setUserCode(int userCode) {
         Command command = new SetCodeCommand(userCode, model);
         commandManager.newCommand(command);
-        notifyObservers(); // TODO : check this notify
+        notifyObservers();
     }
 
     public boolean isUserCodeSet() {
@@ -92,7 +92,7 @@ public class ModelFacade implements Observable {
 
     public void finishGame() {
         model.finishGame();
-        notifyObservers(); // TODO : check this notify
+        notifyObservers();
     }
 
     public void resetGame() {

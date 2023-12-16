@@ -109,12 +109,12 @@ public class UserCode extends VBox implements Observable {
         for (int num : userCode) {
             codeBuilder.append(num);
         }
-        codeDisplay.setText("Code: " + codeBuilder.toString());
+        codeDisplay.setText("Code: " + codeBuilder);
     }
 
     private Polygon createTriangle() {
         Polygon triangle = new Polygon();
-        triangle.getPoints().addAll(new Double[]{10.0, 0.0, 20.0, 20.0, 0.0, 20.0});
+        triangle.getPoints().addAll(10.0, 0.0, 20.0, 20.0, 0.0, 20.0);
         triangle.setFill(Color.BLUE);
         return triangle;
     }
