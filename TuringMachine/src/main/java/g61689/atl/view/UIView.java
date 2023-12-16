@@ -35,7 +35,7 @@ public class UIView extends Application implements Observer {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Turing Machine");
         primaryStage.setMinWidth(1400);
-        primaryStage.setMinHeight(900);
+        primaryStage.setMinHeight(920);
         setup();
         MenuBar menuBar = createMenuBar(primaryStage);
         BorderPane root = new BorderPane();
