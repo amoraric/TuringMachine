@@ -75,17 +75,25 @@ public class UserCode extends VBox implements Observable {
         Button chooseButton = new Button(buttonText);
         chooseButton.setOnAction(e -> {
             StringBuilder code = new StringBuilder();
+            boolean isCodeSet = true;
             for (int cc : userCode) {
+                if (cc == 0) {
+                    isCodeSet = false;
+                }
                 code.append(cc);
             }
-            if (code.length() == 3 && Objects.equals(buttonText, "Guess code")) {
-                modelFacade.enterCode(Integer.parseInt(code.toString()));
-                notifyObservers();
+            if (!isCodeSet) {
+                UIView.popupMessage("Error", "You have to enter the whole code.");
             } else {
-                if (code.length() == 3 && modelFacade.getNumberValidatorsTested() == 0) {
-                    modelFacade.setUserCode(Integer.parseInt(code.toString()));
+                if (Objects.equals(buttonText, "Guess code")) {
+                    modelFacade.enterCode(Integer.parseInt(code.toString()));
+                    notifyObservers();
                 } else {
-                    UIView.popupMessage("Error", "You cannot change the code after testing a validator.");
+                    if (modelFacade.getNumberValidatorsTested() == 0) {
+                        modelFacade.setUserCode(Integer.parseInt(code.toString()));
+                    } else {
+                        UIView.popupMessage("Error", "You cannot change the code after testing a validator.");
+                    }
                 }
             }
         });
